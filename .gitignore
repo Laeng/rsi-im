@@ -15,7 +15,3 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-
-# 프로젝트 제외 경로
-/storage/app/
-/storage/framework/
