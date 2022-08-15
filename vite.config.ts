@@ -3,7 +3,6 @@ import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 import laravel from 'vite-plugin-laravel'
 import vue from '@vitejs/plugin-vue'
-import inertia from './resources/scripts/vite/inertia-layout'
 
 export default defineConfig({
     server: {
@@ -13,7 +12,7 @@ export default defineConfig({
         host: '0.0.0.0'
     },
 	plugins: [
-		inertia(),
+		//inertia(),
 		vue(),
 		laravel({
 			postcss: [
