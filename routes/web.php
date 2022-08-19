@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+require_once __DIR__ . '/web/auth.php';
+require_once __DIR__ . '/web/oauth2.php';
+
 Route::get('/', function () {
     return inertia('welcome');
 });

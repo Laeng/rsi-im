@@ -1,11 +1,12 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-	content: [
+    content: [
 		'./resources/**/*.blade.php',
 		'./resources/**/*.ts',
 		'./resources/**/*.vue',
 	],
+    darkMode: 'media',
 	theme: {
         extend: {
             fontFamily: {
@@ -13,5 +14,7 @@ module.exports = {
             },
         },
     },
-	plugins: [],
+	plugins: [
+
+    ],
 }
