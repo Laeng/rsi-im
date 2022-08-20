@@ -1,21 +1,63 @@
 <script setup lang="ts">
+import axios from 'axios'
 import {useForm} from "@inertiajs/inertia-vue3";
 import TextInput from "@/views/components/input/text-input.vue";
 import InputLabel from "@/views/components/label/input-label.vue";
 import PrimaryButton from "@/views/components/button/primary-button.vue";
 import InfoAlert from "@/views/components/alert/info-alert.vue";
+import {onMounted, reactive, ref} from "vue";
+
+const props = defineProps({
+    code: String,
+    message: String,
+});
+
+const captcha = reactive({
+    show: false,
+    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    lock: false
+});
+
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 const form = useForm({
-    email: '',
+    username: '',
     password: '',
-    remember: false
+    captcha: ''
 });
 
 const submit = () => {
-    form.post(route('login'), {
+    form.post(route('login.submit'), {
         onFinish: () => form.reset('password'),
     });
 };
+
+
+const refreshCaptcha = () => {
+    if (!captcha.lock) {
+        captcha.lock = true;
+        axios.post(route('login.captcha'))
+            .then((response) => {
+                captcha.src = response.data.image;
+            })
+            .catch(() => {
+
+            })
+            .finally(() => {
+                captcha.lock = false;
+            });
+    }
+}
+
+switch (props.code) {
+    case 'ErrCaptchaRequiredLauncher':
+    case 'ErrInvalidChallengeCode':
+        captcha.show = true;
+        refreshCaptcha();
+        break;
+    default:
+        break;
+}
 
 </script>
 
@@ -31,15 +73,29 @@ const submit = () => {
         <div>
             <input-label for="email" value="Email"/>
             <div class="mt-1">
-                <text-input name="email" id="email" placeholder="someone@example.com"/>
+                <text-input name="email" id="email" placeholder="someone@example.com" :modal-value="form.username" required/>
             </div>
         </div>
         <div>
             <input-label for="password" value="Password"/>
             <div class="mt-1">
-                <text-input name="password" id="password" type="password" placeholder="••••••••••••••••"/>
+                <text-input name="password" id="password" type="password" placeholder="••••••••••••••••" :modal-value="form.password" required/>
             </div>
         </div>
+        <template v-show="captcha.show">
+            <div>
+                <input-label for="captcha" value="Captcha"/>
+                <div class="mt-1 relative">
+                    <div class="bg-black rounded-md w-full select-none flex justify-center">
+                        <img class="h-28" :src="captcha.src" alt="captcha"/>
+                    </div>
+                    <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer" @click="refreshCaptcha" v-show="!captcha.lock">Refresh</div>
+                </div>
+                <div class="mt-1">
+                    <text-input name="captcha" id="captcha" placeholder="4 digits numbers" :modal-value="form.captcha"/>
+                </div>
+            </div>
+        </template>
         <div class="flex items-center justify-between">
             <div class="text-sm">
                 <a href="#" class="font-medium text-gray-600 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300">What is this? Is it safe?</a>

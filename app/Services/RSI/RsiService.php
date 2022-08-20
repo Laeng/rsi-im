@@ -2,12 +2,13 @@
 
 namespace App\Services\RSI;
 
+use App\Services\RSI\Interfaces\RsiServiceInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
-class RsiService
+class RsiService implements RsiServiceInterface
 {
     /*
      * I have hidden the detailed paths to protect the CIG's endpoint.
@@ -41,13 +42,15 @@ class RsiService
         $url = $this->base . config('services.rsi.main.login');
         $headerOneValue = Str::lower(Str::random(config('services.rsi.header.one.length')));
 
-        $response = Http::acceptJson()->timeout(1)->withHeaders([
+        $response = Http::acceptJson()->timeout(5)->withHeaders([
             config('services.rsi.header.one.key') => $headerOneValue,
         ])->post($url, [
             'username' => $username,
             'password' => $password,
             'captcha' => $captcha
         ]);
+
+        $this->setHeaders(session(), $headerOneValue, $response['data']['session_id']);
 
         return $this->getResult($response);
     }
@@ -57,7 +60,7 @@ class RsiService
         $url = $this->base . config('services.rsi.main.captcha');
         $session = request()->session();
 
-        $response = Http::accept('image/png')->timeout(1)->withHeaders($this->getHeaders($session))->post($url);
+        $response = Http::accept('image/png')->timeout(5)->withHeaders($this->getHeaders($session))->post($url);
 
         if (!empty($response->body())) {
             return [
@@ -89,7 +92,7 @@ class RsiService
         $url = $this->base . config('services.rsi.main.multi-factor');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(1)->withHeaders($this->getHeaders($session))->post($url, [
+        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, [
             'code' => $code,
             'device_name' => config('app.name'),
             'device_type' => 'computer',
@@ -104,7 +107,7 @@ class RsiService
         $url = $this->base . config('services.rsi.main.games');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(1)->withHeaders($this->getHeaders($session))->post($url, []);
+        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, []);
 
         return $this->getResult($response);
     }
@@ -114,7 +117,7 @@ class RsiService
         $url = $this->base . config('services.rsi.main.library');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(1)->withHeaders($this->getHeaders($session))->post($url, [
+        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, [
             'claims' => $claims
         ]);
 
@@ -127,7 +130,7 @@ class RsiService
         $url = $this->base . config('services.rsi.spectrum.auth');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(1)->withHeaders($this->getHeaders($session))->post($url, []);
+        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, []);
 
         if (!empty($response->body())) {
             return json_decode($response->body(), true);
@@ -151,7 +154,7 @@ class RsiService
 
     public function getHeaders(Session $session): array
     {
-        return $session->get('rsi');
+        return (array) $session->get('rsi');
     }
 
     private function setHeaders(Session $session, $oneValue, $twoValue): void
@@ -165,7 +168,7 @@ class RsiService
     private function getResult(ClientResponse $response): array
     {
         if (!empty($response->body())) {
-            return json_decode($response->body(), true);
+            return json_decode($response->body(), true) ?? [];
         } else {
             if ($response->serverError()) {
                 return [

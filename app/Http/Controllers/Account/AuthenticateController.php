@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Account;
 use App\Models\User;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
 use App\Services\User\Interfaces\UserServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -27,7 +28,10 @@ class AuthenticateController
 
     public function login(Request $request)
     {
-        return Inertia::render('login', []);
+        return Inertia::render('login', [
+            'code' => 'ErrNeedLogin',
+            'message' => 'Need Login'
+        ]);
     }
 
     public function loginSubmit(Request $request): Response|RedirectResponse|InertiaResponse
@@ -45,6 +49,13 @@ class AuthenticateController
         );
 
         return $this->authSteps($request, $loginData);
+    }
+
+    public function loginCaptcha(Request $request): JsonResponse
+    {
+        $captchaData = $this->rsiService->captcha();
+
+        return response()->json($captchaData);
     }
 
     public function loginMultiFactor(Request $request): Response|RedirectResponse|InertiaResponse
@@ -117,6 +128,7 @@ class AuthenticateController
         $user = $this->userService->store($data['account_id'], $data);
 
         Auth::loginUsingId($user->id);
+        $request->session()->regenerateToken();
 
         return redirect()->intended(route('app.index'));
     }

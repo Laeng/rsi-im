@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
-defineProps(['modelValue']);
+defineProps({
+    'modalValue': {
+        type: String,
+        default: '',
+    }
+});
 defineEmits(['update:modelValue']);
 
 const input = ref(null);

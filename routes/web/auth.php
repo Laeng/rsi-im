@@ -6,4 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('web')->group(function () {
     Route::get('connect', [AuthenticateController::class, 'login'])->name('login');
     Route::post('connect/submit', [AuthenticateController::class, 'loginSubmit'])->name('login.submit');
+    Route::post('connect/captcha', [AuthenticateController::class, 'loginCaptcha'])->name('login.captcha');
+
 });

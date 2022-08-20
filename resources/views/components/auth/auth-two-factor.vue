@@ -2,10 +2,17 @@
 
 </template>
 
-<script>
-export default {
-    name: "two-factor"
-}
+<script setup lang="ts">
+defineProps({
+    code: {
+        type: String,
+        default: '',
+    },
+    message: {
+        type: String,
+        default: '',
+    }
+});
 </script>
 
 <style scoped>

@@ -13,5 +13,5 @@ interface RsiServiceInterface
     public function games(): array;
     public function library(string $claims): array;
     public function spectrum(): array;
-    public function getHeaders(Session $session, array $data = []): array;
+    public function getHeaders(Session $session): array;
 }

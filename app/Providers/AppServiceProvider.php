@@ -16,9 +16,12 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         Passport::ignoreMigrations();
+
+        $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(RsiServiceInterface::class, RsiService::class);
     }
 
     /**
@@ -26,9 +29,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app->bind(UserServiceInterface::class, UserService::class);
-        $this->app->bind(RsiServiceInterface::class, RsiService::class);
     }
 }
