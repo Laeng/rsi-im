@@ -9,6 +9,11 @@
                     <p>This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.</p>
                 </li>
                 <li>
+                    <Link :href="route('login')" class="underline decoration-dotted hover:text-indigo-500" target="_blank">
+                        Privacy Policy
+                    </Link>
+                </li>
+                <li>
                     <div class="flex justify-center space-x-2 items-end pt-6">
                         <div>
                             <p class="text-xs text-gray-400 dark:text-gray-600 mb-0.5">Developed by</p>
@@ -23,6 +28,8 @@
 
 <script setup lang="ts">
 import LaengCoLogo from "@/views/components/logo/laeng-co.vue";
+import { Head, Link } from '@inertiajs/inertia-vue3';
+
 </script>
 
 <style scoped>

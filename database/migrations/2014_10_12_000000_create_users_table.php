@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->longText('data');
+            $table->longText('data')->default('{}');
             $table->rememberToken();
             $table->timestamps();
         });

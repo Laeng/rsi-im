@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\RSI\Interfaces\RsiServiceInterface;
+use App\Services\RSI\RsiService;
+use App\Services\User\Interfaces\UserServiceInterface;
+use App\Services\User\UserService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -24,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(UserServiceInterface::class, UserService::class);
+        $this->app->bind(RsiServiceInterface::class, RsiService::class);
     }
 }
