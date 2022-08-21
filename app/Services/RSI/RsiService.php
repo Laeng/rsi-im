@@ -6,6 +6,7 @@ use App\Services\RSI\Interfaces\RsiServiceInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Client\Response as ClientResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class RsiService implements RsiServiceInterface
@@ -15,19 +16,18 @@ class RsiService implements RsiServiceInterface
      * And I hope your understanding as this is a decision for your account and their security.
      * Thank you.
      *
-     * - laeng
+     * by laeng
      */
 
-    readonly private string $base;
 
-    public function __construct()
-    {
-        /*
-         * Base endpoint.
-         * It is the same as the base address of RSI. This is the basis.
-         */
-        $this->base = 'https://robertsspaceindustries.com';
-    }
+    /**
+     * It's the same as the website URL of RSI.
+     * All APIs implemented here are based on this address.
+     *
+     * @var string Base Endpoint
+     */
+    private string $base = 'https://robertsspaceindustries.com';
+    private string $sessionName = 'RSI_SESSION';
 
     public function status(): array
     {
@@ -40,21 +40,27 @@ class RsiService implements RsiServiceInterface
     public function login(string $username, string $password, string $captcha = ''): array
     {
         $url = $this->base . config('services.rsi.main.login');
-        $headerOneValue = Str::lower(Str::random(config('services.rsi.header.one.length')));
+        $session = request()->session();
+        $header = $this->getHeaders($session);
 
-        $response = Http::acceptJson()->timeout(5)->withHeaders([
-            config('services.rsi.header.one.key') => $headerOneValue,
-        ])->post($url, [
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($header)
+            ->post($url, [
+                'username' => $username,
+                'password' => $password,
+                'captcha' => $captcha
+            ]);
+
+        Log::debug('login');
+        Log::debug([
             'username' => $username,
             'password' => $password,
             'captcha' => $captcha
         ]);
+        Log::debug($header);
 
-        if (isset($response['data']['session_id'])) {
-            $this->setHeaders(request()->session(), $headerOneValue, $response['data']['session_id']);
-        }
-
-        return $this->getResult($response);
+        return $this->getResult($session, $response);
     }
 
     public function captcha(): array
@@ -62,46 +68,55 @@ class RsiService implements RsiServiceInterface
         $url = $this->base . config('services.rsi.main.captcha');
         $session = request()->session();
 
-        $response = Http::accept('image/png')->timeout(5)->withHeaders($this->getHeaders($session))->post($url);
+        $response = Http::accept('image/png')
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, []);
+
+        Log::debug('captcha');
+        Log::debug($this->getHeaders($session));
 
         if (!empty($response->body())) {
             return [
                 'success' => 1,
                 'code' => 'OK',
-                'image' => 'data:image/png;base64,'.base64_encode($response)
+                'data' => [
+                    'image' => 'data:image/png;base64,'.base64_encode($response)
+                ]
             ];
         } else {
-            if ($response->serverError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownServerError'
-                ];
-            }
+            $code = 'ErrUnknown';
 
-            if ($response->clientError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownClientError'
-                ];
-            }
+            if ($response->serverError()) $code = 'ErrServer';
+            if ($response->clientError()) $code = 'ErrClient';
+
+            return [
+                'success' => 0,
+                'code' => $code,
+                'data' => [
+                    'image' => 'data:image/png;base64,'
+                ]
+            ];
         }
-
-        return [];
     }
 
     public function multiFactor(string $code, string $duration): array
     {
         $url = $this->base . config('services.rsi.main.multi-factor');
         $session = request()->session();
+        $header = $this->getHeaders($session);
 
-        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, [
-            'code' => $code,
-            'device_name' => config('app.name'),
-            'device_type' => 'computer',
-            'duration' => $duration
-        ]);
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($header)
+            ->post($url, [
+                'code' => $code,
+                'device_name' => config('app.name'),
+                'device_type' => 'computer',
+                'duration' => $duration
+            ]);
 
-        return $this->getResult($response);
+        return $this->getResult($session, $response);
     }
 
     public function games(): array
@@ -109,9 +124,12 @@ class RsiService implements RsiServiceInterface
         $url = $this->base . config('services.rsi.main.games');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, []);
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, []);
 
-        return $this->getResult($response);
+        return $this->getResult($session, $response);
     }
 
     public function library(string $claims): array
@@ -119,11 +137,14 @@ class RsiService implements RsiServiceInterface
         $url = $this->base . config('services.rsi.main.library');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, [
-            'claims' => $claims
-        ]);
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, [
+                'claims' => $claims
+            ]);
 
-        return $this->getResult($response);
+        return $this->getResult($session, $response);
     }
 
 
@@ -132,62 +153,79 @@ class RsiService implements RsiServiceInterface
         $url = $this->base . config('services.rsi.spectrum.auth');
         $session = request()->session();
 
-        $response = Http::acceptJson()->timeout(5)->withHeaders($this->getHeaders($session))->post($url, []);
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, []);
 
-        if (!empty($response->body())) {
-            return json_decode($response->body(), true);
-        } else {
-            if ($response->serverError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownServerError'
-                ];
-            }
+        return $this->getHeaders($session, $response);
+    }
 
-            if ($response->clientError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownClientError'
-                ];
-            }
-        }
-        return [];
+    public function logout(): array
+    {
+        $url = $this->base . config('services.rsi.main.logout');
+        $session = request()->session();
+
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, []);
+
+        return $this->getResult($session, $response);
     }
 
     public function getHeaders(Session $session): array
     {
-        return (array) $session->get('rsi');
+        $header = $session->get($this->sessionName);
+
+        if (is_null($header) || !array_key_exists(config('services.rsi.header.one.key'), $header)) {
+            $one = Str::lower(Str::random(config('services.rsi.header.one.length')));
+            $this->setHeaders($session, $one, '');
+
+            $header = $this->getHeaders($session);
+        }
+
+        return $header;
     }
 
-    private function setHeaders(Session $session, $oneValue, $twoValue): void
+    private function setHeaders(Session $session, $one, $two): void
     {
-        $session->put('rsi', [
-            config('services.rsi.header.one.key') => $oneValue,
-            config('services.rsi.header.two.key') => $twoValue
+        $session->put($this->sessionName, [
+            config('services.rsi.header.one.key') => $one,
+            config('services.rsi.header.two.key') => $two
         ]);
     }
 
-    private function getResult(ClientResponse $response): array
+    private function getResult(Session $session, ClientResponse $response): array
     {
         if (!empty($response->body())) {
-            return json_decode($response->body(), true) ?? [];
-        } else {
-            if ($response->serverError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownServerError',
-                    'msg' => ''
-                ];
+            $header = $this->getHeaders($session);
+            $data = json_decode($response->body(), true) ?? [];
+
+            Log::debug($data);
+
+            if (isset($data['data']['session_id'])) {
+                $this->setHeaders(
+                    $session,
+                    $header[config('services.rsi.header.one.key')],
+                    $data['data']['session_id']
+                );
             }
 
-            if ($response->clientError()) {
-                return [
-                    'success' => 0,
-                    'code' => 'ErrUnknownClientError',
-                    'msg' => ''
-                ];
-            }
+            return $data;
+        } else {
+            $code = 'ErrUnknown';
+
+            if ($response->serverError()) $code = 'ErrServer';
+            if ($response->clientError()) $code = 'ErrClient';
+
+            return [
+                'success' => 0,
+                'code' => $code,
+                'data' => [
+                    'image' => 'data:image/png;base64,'
+                ]
+            ];
         }
-        return [];
     }
 }

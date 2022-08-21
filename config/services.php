@@ -58,7 +58,8 @@ return [
             'captcha' => env('RSI_MAIN_CAPTCHA', ''),
             'multi-factor'=>env('RSI_MAIN_FACTOR', ''),
             'games' => env('RSI_MAIN_GAMES', ''),
-            'library' => env('RSI_MAIN_LIBRARY', '')
+            'library' => env('RSI_MAIN_LIBRARY', ''),
+            'logout' => env('RSI_MAIN_LOGOUT', '')
         ],
         'spectrum' => [
             'auth' => env('RSI_SPECTRUM_AUTH', '')

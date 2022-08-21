@@ -19,9 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id',
-        'data',
-        'device_id',
-        'device_token'
+        'data'
     ];
 
     /**
@@ -39,6 +37,6 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-
+        'data' => 'array'
     ];
 }

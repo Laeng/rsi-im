@@ -35,14 +35,12 @@ class AuthenticateController
             $data = $redirectData;
         }
 
-        switch ($data['code']) {
-            case 'ErrMultiStepRequired':
-            case 'ErrMultiStepExpired':
-            case 'ErrMultiStepWrongCode':
-                return Inertia::render('auth/multi-factor', $data);
-            default:
-                return Inertia::render('auth/basic', $data);
-        }
+        return match ($data['code']) {
+            'ErrMultiStepRequired',
+            'ErrMultiStepExpired',
+            'ErrMultiStepWrongCode' => Inertia::render('auth/multi-factor', $data),
+            default => Inertia::render('auth/basic', $data),
+        };
     }
 
     public function loginSubmit(Request $request): Response|RedirectResponse|InertiaResponse
@@ -56,7 +54,7 @@ class AuthenticateController
         $loginData = $this->rsiService->login(
             $request->get('username'),
             $request->get('password'),
-            $request->get('captcha') ?? '',
+            $request->get('captcha') ?? ''
         );
 
         return $this->authSteps($request, $loginData);
@@ -76,7 +74,10 @@ class AuthenticateController
             'duration' => ['required', 'string'],
         ]);
 
-        $loginData = $this->rsiService->multiFactor($request->get('code'), $request->get('duration'));
+        $loginData = $this->rsiService->multiFactor(
+            $request->get('code'),
+            $request->get('duration')
+        );
 
         return $this->authSteps($request, $loginData);
     }
@@ -101,29 +102,37 @@ class AuthenticateController
         $spectrumData = $this->rsiService->spectrum();
 
         if ($spectrumData['success'] == 0) {
-            return redirect()->route('login')->with('data', [
-                'code' => $spectrumData['code'],
-                'message' => $spectrumData['msg']
-            ]);
+            return redirect()
+                ->route('login')
+                ->with('data', [
+                    'code' => $spectrumData['code'],
+                    'message' => $spectrumData['msg']
+                ]);
         }
 
         $gameData = $this->rsiService->games();
 
         if ($gameData['success'] == 0) {
-            return redirect()->route('login')->with('data', [
-                'code' => $gameData['code'],
-                'message' => $gameData['msg']
-            ]);
+            return redirect()
+                ->route('login')
+                ->with('data', [
+                    'code' => $gameData['code'],
+                    'message' => $gameData['msg']
+                ]);
         }
 
         $libraryData = $this->rsiService->library($gameData['data']);
 
         if ($libraryData['success'] == 0) {
-            return redirect()->route('login')->with('data', [
-                'code' => $libraryData['code'],
-                'message' => $libraryData['msg']
-            ]);
+            return redirect()
+                ->route('login')
+                ->with('data', [
+                    'code' => $libraryData['code'],
+                    'message' => $libraryData['msg']
+                ]);
         }
+
+        $this->rsiService->logout();
 
         $data = array_merge(
             $this->refineAccountData($loginData),

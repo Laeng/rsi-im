@@ -8,6 +8,7 @@ import PrimaryButton from "@/views/components/button/primary-button.vue";
 import InfoAlert from "@/views/components/alert/info-alert.vue";
 import ErrorAlert from "@/views/components/alert/error-alert.vue";
 import {onMounted, reactive, ref, watch, watchEffect} from "vue";
+import {RefreshIcon} from "@heroicons/vue/solid";
 
 const props = defineProps({
     code: String,
@@ -51,7 +52,7 @@ const refreshCaptcha = () => {
         captcha.reload = true;
         axios.post(route('login.captcha'))
             .then((response) => {
-                captcha.src = response.data.image;
+                captcha.src = response.data.data.image;
             })
             .catch(() => {
 
@@ -135,7 +136,9 @@ watchEffect(() => {
                     <div class="bg-black rounded-md w-full select-none flex justify-center shadow-sm">
                         <img class="h-28" :src="captcha.src" alt="captcha"/>
                     </div>
-                    <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer" @click="refreshCaptcha" v-show="!captcha.reload">Refresh</div>
+                    <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer mb-1" @click="refreshCaptcha">
+                        <RefreshIcon class="h-5 w-5" :class="{'icon-spin': captcha.reload}"></RefreshIcon>
+                    </div>
                 </div>
                 <div class="mt-1">
                     <text-input id="captcha" placeholder="4 digits numbers" v-model="form.captcha"/>
@@ -159,6 +162,19 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.icon-spin {
+    animation: icon-spin 1s linear infinite;
+    animation-direction: reverse;
+}
+
+@keyframes icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 </style>
 
