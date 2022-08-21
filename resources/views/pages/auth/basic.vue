@@ -20,12 +20,11 @@ const alert = reactive({
 });
 
 const captcha = reactive({
-    show: false,
     src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    show: false,
+    reload: false,
     lock: false
 });
-
-let isCaptchaLoad:boolean = false;
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -41,17 +40,15 @@ const submit = () => {
             form.reset('password');
             form.reset('captcha');
 
-            if (captcha.show) {
-                isCaptchaLoad = false;
-            }
+            captcha.lock = false;
         },
     });
 };
 
 
 const refreshCaptcha = () => {
-    if (!captcha.lock) {
-        captcha.lock = true;
+    if (!captcha.reload) {
+        captcha.reload = true;
         axios.post(route('login.captcha'))
             .then((response) => {
                 captcha.src = response.data.image;
@@ -60,11 +57,13 @@ const refreshCaptcha = () => {
 
             })
             .finally(() => {
-                captcha.lock = false;
+                captcha.reload = false;
+                form.reset('captcha');
             });
     }
 }
 
+/*
 watch(() => props.code, (code, oldCode) => {
     if (code !== 'OK') {
         alert.show = true;
@@ -78,6 +77,25 @@ watch(() => props.code, (code, oldCode) => {
             refreshCaptcha();
             break;
         default:
+            break;
+    }
+});
+*/
+
+watchEffect(() => {
+    alert.show = (props.code !== 'OK');
+
+    switch (props.code) {
+        case 'ErrCaptchaRequiredLauncher':
+        case 'ErrInvalidChallengeCode':
+            captcha.show = true;
+            if (!captcha.lock) {
+                captcha.lock = true;
+                refreshCaptcha();
+            }
+            break;
+        default:
+            captcha.show = false;
             break;
     }
 });
@@ -117,7 +135,7 @@ watch(() => props.code, (code, oldCode) => {
                     <div class="bg-black rounded-md w-full select-none flex justify-center shadow-sm">
                         <img class="h-28" :src="captcha.src" alt="captcha"/>
                     </div>
-                    <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer" @click="refreshCaptcha" v-show="!captcha.lock">Refresh</div>
+                    <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer" @click="refreshCaptcha" v-show="!captcha.reload">Refresh</div>
                 </div>
                 <div class="mt-1">
                     <text-input id="captcha" placeholder="4 digits numbers" v-model="form.captcha"/>
