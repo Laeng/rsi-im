@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -218,7 +219,9 @@ class AuthenticateController
                     'id' => $channel['id'],
                     'name' => $channel['name'],
                     'version' => $channel['version'],
-                    'versionLabel' => $channel['versionLabel']
+                    'versionLabel' => $channel['versionLabel'],
+                    'platformId' => $channel['platformId'],
+                    'nid' => $channel['nid']
                 ];
             }
 
@@ -226,7 +229,6 @@ class AuthenticateController
                 'id' => $game['id'],
                 'name' => $game['name'],
                 'channels' => $channels,
-                'nid' => $game['nid']
             ];
         }
 

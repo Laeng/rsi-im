@@ -15,7 +15,7 @@ const props = defineProps({
 
 const form = useForm({
     code: '',
-    duration: ''
+    duration: 'session'
 });
 
 const alert = reactive({

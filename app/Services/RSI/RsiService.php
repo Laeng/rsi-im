@@ -52,14 +52,6 @@ class RsiService implements RsiServiceInterface
                 'captcha' => $captcha
             ]);
 
-        Log::debug('login');
-        Log::debug([
-            'username' => $username,
-            'password' => $password,
-            'captcha' => $captcha
-        ]);
-        Log::debug($header);
-
         return $this->getResult($session, $response);
     }
 
@@ -72,9 +64,6 @@ class RsiService implements RsiServiceInterface
             ->timeout(5)
             ->withHeaders($this->getHeaders($session))
             ->post($url, []);
-
-        Log::debug('captcha');
-        Log::debug($this->getHeaders($session));
 
         if (!empty($response->body())) {
             return [
@@ -158,7 +147,7 @@ class RsiService implements RsiServiceInterface
             ->withHeaders($this->getHeaders($session))
             ->post($url, []);
 
-        return $this->getHeaders($session, $response);
+        return $this->getResult($session, $response);
     }
 
     public function logout(): array
@@ -201,8 +190,6 @@ class RsiService implements RsiServiceInterface
         if (!empty($response->body())) {
             $header = $this->getHeaders($session);
             $data = json_decode($response->body(), true) ?? [];
-
-            Log::debug($data);
 
             if (isset($data['data']['session_id'])) {
                 $this->setHeaders(
