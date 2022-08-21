@@ -20,7 +20,7 @@ import { ExclamationIcon } from '@heroicons/vue/solid'
 defineProps({
     title: {
         type: String,
-        default: ''
+        default: 'WARNING'
     }
 });
 </script>

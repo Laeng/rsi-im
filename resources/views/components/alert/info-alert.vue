@@ -20,7 +20,7 @@ import { InformationCircleIcon } from '@heroicons/vue/solid'
 defineProps({
     title: {
         type: String,
-        default: ''
+        default: 'INFORMATION'
     }
 });
 </script>

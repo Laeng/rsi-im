@@ -7,7 +7,7 @@ import InputLabel from "@/views/components/label/input-label.vue";
 import PrimaryButton from "@/views/components/button/primary-button.vue";
 import InfoAlert from "@/views/components/alert/info-alert.vue";
 import ErrorAlert from "@/views/components/alert/error-alert.vue";
-import {onMounted, reactive, ref, watchEffect} from "vue";
+import {onMounted, reactive, ref, watch, watchEffect} from "vue";
 
 const props = defineProps({
     code: String,
@@ -25,7 +25,7 @@ const captcha = reactive({
     lock: false
 });
 
-let code:String|undefined;
+let isCaptchaLoad:boolean = false;
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -41,7 +41,9 @@ const submit = () => {
             form.reset('password');
             form.reset('captcha');
 
-            code = '';
+            if (captcha.show) {
+                isCaptchaLoad = false;
+            }
         },
     });
 };
@@ -63,22 +65,20 @@ const refreshCaptcha = () => {
     }
 }
 
-watchEffect(() => {
-    if (code !== props.code) {
-        if (props.code !== 'OK') {
-            alert.show = true;
-        }
+watch(() => props.code, (code, oldCode) => {
+    if (code !== 'OK') {
+        alert.show = true;
+    }
 
-        switch (props.code) {
-            case 'ErrCaptchaRequiredLauncher':
-            case 'ErrInvalidChallengeCode':
-                captcha.show = true;
-                refreshCaptcha();
-                break;
-            default:
-                break;
-        }
-        code = props.code;
+    switch (code) {
+        case 'ErrCaptchaRequiredLauncher':
+        case 'ErrInvalidChallengeCode':
+            isCaptchaLoad = true;
+            captcha.show = true;
+            refreshCaptcha();
+            break;
+        default:
+            break;
     }
 });
 
@@ -93,7 +93,7 @@ watchEffect(() => {
                         <li>For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <strong class="font-semibold underline decoration-dotted">rsi.im</strong>.</li>
                     </ul>
                 </info-alert>
-                <error-alert v-show="alert.show" title="Oops... (⊙_⊙;)">
+                <error-alert v-show="alert.show" title="ERROR">
                     <ul>
                         <li>{{ props.message }}</li>
                     </ul>
@@ -114,13 +114,13 @@ watchEffect(() => {
             <div v-show="captcha.show">
                 <input-label for="captcha" value="Captcha"/>
                 <div class="mt-1 relative">
-                    <div class="bg-black rounded-md w-full select-none flex justify-center">
+                    <div class="bg-black rounded-md w-full select-none flex justify-center shadow-sm">
                         <img class="h-28" :src="captcha.src" alt="captcha"/>
                     </div>
                     <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer" @click="refreshCaptcha" v-show="!captcha.lock">Refresh</div>
                 </div>
                 <div class="mt-1">
-                    <text-input name="captcha" id="captcha" placeholder="4 digits numbers" v-model="form.captcha"/>
+                    <text-input id="captcha" placeholder="4 digits numbers" v-model="form.captcha"/>
                 </div>
             </div>
             <div class="flex items-center justify-between">

@@ -43,7 +43,7 @@ watchEffect(() => {
     <auth-layout>
         <form @submit.prevent="submit" class="space-y-6">
             <div>
-                <error-alert v-show="alert.show" title="Oops... (⊙_⊙;)">
+                <error-alert v-show="alert.show" title="ERROR">
                     <ul>
                         <li>{{ props.message }}</li>
                     </ul>
