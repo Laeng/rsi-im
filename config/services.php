@@ -44,17 +44,13 @@ return [
         ],
         'header' => [
             'one' => [
-                'title' => env('RSI_HEADER_ONE_TITLE', ''),
+                'key' => env('RSI_HEADER_ONE_KEY', ''),
                 'length' => env('RSI_HEADER_ONE_LENGTH', ''),
             ],
             'two' => [
-                'title' => env('RSI_HEADER_TWO_TITLE', ''),
+                'key' => env('RSI_HEADER_TWO_KEY', ''),
                 'length' => env('RSI_HEADER_TWO_LENGTH', ''),
-            ],
-            'three' => [
-                'title' => env('RSI_HEADER_three_TITLE', ''),
-                'length' => env('RSI_HEADER_three_LENGTH', ''),
-            ],
+            ]
         ],
         'main' => [
             'status' => env('RSI_MAIN_STATUS', ''),

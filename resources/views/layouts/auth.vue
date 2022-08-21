@@ -5,7 +5,7 @@ import AuthFooter from "@/views/components/auth/auth-footer.vue";
 </script>
 
 <template>
-    <div class="flex flex-col h-screen bg-gray-200 dark:bg-[#273247]">
+    <div class="flex flex-col h-screen">
         <header class="w-full">
             <div class="max-w-3xl mx-auto p-4 sm:px-6 lg:px-8">
                 <div class="flex justify-end">

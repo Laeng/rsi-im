@@ -28,24 +28,35 @@ class AuthenticateController
 
     public function login(Request $request)
     {
-        return Inertia::render('login', [
-            'code' => 'ErrNeedLogin',
-            'message' => 'Need Login'
-        ]);
+        $data = ['code' => 'OK', 'message' => ''];
+        $redirectData = $request->session()->get('data');
+
+        if (!is_null($redirectData)) {
+            $data = $redirectData;
+        }
+
+        switch ($data['code']) {
+            case 'ErrMultiStepRequired':
+            case 'ErrMultiStepExpired':
+            case 'ErrMultiStepWrongCode':
+                return Inertia::render('auth/multi-factor', $data);
+            default:
+                return Inertia::render('auth/basic', $data);
+        }
     }
 
     public function loginSubmit(Request $request): Response|RedirectResponse|InertiaResponse
     {
-        Request::validate([
+        $request->validate([
             'username' => ['required', 'string'],
             'password' => ['required', 'string'],
-            'captcha' => ['string'],
+            'captcha' => ['string', 'nullable'],
         ]);
 
         $loginData = $this->rsiService->login(
             $request->get('username'),
             $request->get('password'),
-            $request->get('captcha', ''),
+            $request->get('captcha') ?? '',
         );
 
         return $this->authSteps($request, $loginData);
@@ -60,7 +71,7 @@ class AuthenticateController
 
     public function loginMultiFactor(Request $request): Response|RedirectResponse|InertiaResponse
     {
-        Request::validate([
+        $request->validate([
             'code' => ['required', 'string'],
             'duration' => ['required', 'string'],
         ]);
@@ -72,13 +83,13 @@ class AuthenticateController
 
     private function authSteps(Request $request, array $loginData): Response|RedirectResponse|InertiaResponse
     {
-        if ($loginData == []) {
+        if (empty($loginData)) {
             return Inertia::render('login', []);
         }
 
         return match ($loginData['code']) {
             "OK" => $this->nextSteps($request, $loginData),
-            default => Inertia::render('login', [
+            default => redirect()->route('login')->with('data', [
                 'code' => $loginData['code'],
                 'message' => $loginData['msg']
             ]),
@@ -90,7 +101,7 @@ class AuthenticateController
         $spectrumData = $this->rsiService->spectrum();
 
         if ($spectrumData['success'] == 0) {
-            return Inertia::render('login', [
+            return redirect()->route('login')->with('data', [
                 'code' => $spectrumData['code'],
                 'message' => $spectrumData['msg']
             ]);
@@ -99,7 +110,7 @@ class AuthenticateController
         $gameData = $this->rsiService->games();
 
         if ($gameData['success'] == 0) {
-            return Inertia::render('login', [
+            return redirect()->route('login')->with('data', [
                 'code' => $gameData['code'],
                 'message' => $gameData['msg']
             ]);
@@ -108,7 +119,7 @@ class AuthenticateController
         $libraryData = $this->rsiService->library($gameData['data']);
 
         if ($libraryData['success'] == 0) {
-            return Inertia::render('login', [
+            return redirect()->route('login')->with('data', [
                 'code' => $libraryData['code'],
                 'message' => $libraryData['msg']
             ]);

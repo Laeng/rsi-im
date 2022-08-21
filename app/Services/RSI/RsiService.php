@@ -50,7 +50,9 @@ class RsiService implements RsiServiceInterface
             'captcha' => $captcha
         ]);
 
-        $this->setHeaders(session(), $headerOneValue, $response['data']['session_id']);
+        if (isset($response['data']['session_id'])) {
+            $this->setHeaders(request()->session(), $headerOneValue, $response['data']['session_id']);
+        }
 
         return $this->getResult($response);
     }
@@ -160,8 +162,8 @@ class RsiService implements RsiServiceInterface
     private function setHeaders(Session $session, $oneValue, $twoValue): void
     {
         $session->put('rsi', [
-            config('services.rsi.header.one.title') => $oneValue,
-            config('services.rsi.header.two.title') => $twoValue
+            config('services.rsi.header.one.key') => $oneValue,
+            config('services.rsi.header.two.key') => $twoValue
         ]);
     }
 

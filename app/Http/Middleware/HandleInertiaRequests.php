@@ -40,7 +40,7 @@ class HandleInertiaRequests extends Middleware
             'versions' => [
             	'php' => PHP_VERSION,
             	'laravel' => \Illuminate\Foundation\Application::VERSION
-            ],
+            ]
         ]);
     }
 }
