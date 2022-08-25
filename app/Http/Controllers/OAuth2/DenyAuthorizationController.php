@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Passport\Http\Controllers\RetrievesAuthRequestFromSession;
 
-class DenyAuthorizationController
+class DenyAuthorizationController  extends \Laravel\Passport\Http\Controllers\DenyAuthorizationController
 {
     use RetrievesAuthRequestFromSession;
 
@@ -17,7 +17,7 @@ class DenyAuthorizationController
      *
      * @var ResponseFactory
      */
-    protected ResponseFactory $response;
+    protected $response;
 
     /**
      * Create a new controller instance.
@@ -27,31 +27,8 @@ class DenyAuthorizationController
      */
     public function __construct(ResponseFactory $response)
     {
+        parent::__construct($response);
         $this->response = $response;
     }
 
-    /**
-     * Deny the authorization request.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function deny(Request $request): RedirectResponse
-    {
-        $this->assertValidAuthToken($request);
-
-        $authRequest = $this->getAuthRequestFromSession($request);
-
-        $clientUris = Arr::wrap($authRequest->getClient()->getRedirectUri());
-
-        if (! in_array($uri = $authRequest->getRedirectUri(), $clientUris)) {
-            $uri = Arr::first($clientUris);
-        }
-
-        $separator = $authRequest->getGrantTypeId() === 'implicit' ? '#' : (str_contains($uri, '?') ? '&' : '?');
-
-        return $this->response->redirectTo(
-            $uri.$separator.'error=access_denied&state='.$request->input('state')
-        );
-    }
 }

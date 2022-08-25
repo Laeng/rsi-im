@@ -122,7 +122,8 @@ class AuthenticateController
                 ]);
         }
 
-        $libraryData = $this->rsiService->library($gameData['data']);
+        $gameDataData = array_key_exists('data', $gameData) ? $gameData['data'] : '';
+        $libraryData = $this->rsiService->library($gameDataData);
 
         if ($libraryData['success'] == 0) {
             return redirect()
@@ -133,25 +134,53 @@ class AuthenticateController
                 ]);
         }
 
-        $this->rsiService->logout();
+        $releaseData = [];
+        $games = array_key_exists('data', $libraryData) && array_key_exists('games', $libraryData['data']) ? $libraryData['data']['games'] : [];
+
+        foreach ($games as $game) {
+            foreach ($game['channels'] as $channel) {
+                $channelId = array_key_exists('id', $channel) ? $channel['id'] : '';
+                $gameId =  array_key_exists('id', $channel) ? $game['id'] : '';
+
+                $release = $this->rsiService->release($gameDataData, $channelId, $gameId);
+
+                if ($release['success'] == 0) {
+                    continue;
+                }
+
+                $releaseData[] = $release['data'];
+            }
+        }
+
+        $session = $request->session();
+        $device = $this->rsiService->getHeaders($session);
 
         $data = array_merge(
+            [
+                'username' => $this->rsiService->getUsername($session),
+                'session_id' => $device[config('services.rsi.header.two.key')]
+            ],
             $this->refineAccountData($loginData),
+            $this->refineGameData($gameData),
             $this->refineSpectrumData($spectrumData),
-            $this->refineLibraryData($libraryData)
+            $this->refineLibraryData($libraryData),
+            [
+                'releases' => $releaseData
+            ]
         );
 
         unset($libraryData);
         unset($spectrumData);
         unset($gameData);
         unset($libraryData);
+        unset($releaseData);
 
         $user = $this->userService->store($data['account_id'], $data);
 
         Auth::loginUsingId($user->id);
         $request->session()->regenerateToken();
 
-        return redirect()->intended(route('app.index'));
+        return redirect()->intended(route('index'));
     }
 
     private function refineAccountData(array $response): array|null
@@ -164,10 +193,24 @@ class AuthenticateController
         $data = $response['data'];
 
         return [
-            'account_id' => $data['account_id'],
-            'nickname' => $data['nickname'],
-            'display_name' => $data['displayname'],
-            'badges' => $data['badges']
+            'account_id' => array_key_exists('account_id', $data) ? $data['account_id']: null,
+            'nickname' => array_key_exists('nickname', $data) ? $data['nickname'] : null,
+            'display_name' => array_key_exists('displayname', $data) ? $data['displayname'] : null,
+            'badges' => array_key_exists('badges', $data) ? $data['badges'] : []
+        ];
+    }
+
+    private function refineGameData(array $response): array|null
+    {
+        if ($response['success'] !== 1)
+        {
+            return null;
+        }
+
+        $data = $response['data'];
+
+        return [
+            'session_data' => $data
         ];
     }
 
@@ -186,17 +229,16 @@ class AuthenticateController
                 if ($community['id'] == 1) continue;
 
                 $organizations[] = [
-                    'id' => $community['id'],
-                    'name' => $community['name'],
-                    'avatar' => $community['avatar'],
-                    'banner' => $community['banner']
+                    'id' => array_key_exists('id', $community) ? $community['id'] : null,
+                    'name' => array_key_exists('name', $community) ? $community['name'] : null,
+                    'avatar' => array_key_exists('avatar', $community) ? $community['avatar'] : null,
+                    'banner' => array_key_exists('banner', $community) ? $community['banner'] : null
                 ];
             }
         }
 
         return [
-            'spectrum_id' => $data['member']['id'],
-            'avatar' => $data['member']['avatar'],
+            'avatar' => array_key_exists('member', $data) && array_key_exists('avatar', $data['member']) ? $data['member']['avatar'] : null,
             'organizations' => $organizations,
         ];
     }
@@ -216,18 +258,15 @@ class AuthenticateController
 
             foreach ($game['channels'] as $channel) {
                 $channels[] = [
-                    'id' => $channel['id'],
-                    'name' => $channel['name'],
-                    'version' => $channel['version'],
-                    'versionLabel' => $channel['versionLabel'],
-                    'platformId' => $channel['platformId'],
-                    'nid' => $channel['nid']
+                    'id' => array_key_exists('id', $channel) ? $channel['id'] : null,
+                    'name' => array_key_exists('name', $channel) ? $channel['name'] : null,
+                    'nid' => array_key_exists('nid', $channel) ? $channel['nid'] : null
                 ];
             }
 
             $games[] = [
-                'id' => $game['id'],
-                'name' => $game['name'],
+                'id' => array_key_exists('id', $game) ? $game['id'] : null,
+                'name' => array_key_exists('id', $game) ? $game['name'] : null,
                 'channels' => $channels,
             ];
         }

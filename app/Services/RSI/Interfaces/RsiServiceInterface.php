@@ -57,6 +57,16 @@ interface RsiServiceInterface
     public function library(string $claims): array;
 
     /**
+     * Get game version
+     *
+     * @param string $claims
+     * @param string $channel
+     * @param string $game
+     * @return array
+     */
+    public function release(string $claims, string $channel, string $game): array;
+
+    /**
      * Get Organizational Information
      *
      * @return array
@@ -72,4 +82,6 @@ interface RsiServiceInterface
     public function logout(): array;
 
     public function getHeaders(Session $session): array;
+
+    public function getUsername(Session $session): string;
 }

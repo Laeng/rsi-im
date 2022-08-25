@@ -4,6 +4,7 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Passport::tokensCan([
+            'launch-game' => 'Provides information to run the game. Third parties may execute the game using your account.',
+            'list-of-games' => 'Provides a list of games you have pledge.',
+            'list-of-organizations' => 'Provides a list of organizations to which you have joined.',
+            'basic-info' => 'Provide your unique account number, nickname, display name, badge list, and avatar image.'
+        ]);
+
+        Passport::setDefaultScope([
+            'basic-info',
+        ]);
     }
 }

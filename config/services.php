@@ -59,6 +59,7 @@ return [
             'multi-factor'=>env('RSI_MAIN_FACTOR', ''),
             'games' => env('RSI_MAIN_GAMES', ''),
             'library' => env('RSI_MAIN_LIBRARY', ''),
+            'release' => env('RSI_MAIN_RELEASE', ''),
             'logout' => env('RSI_MAIN_LOGOUT', '')
         ],
         'spectrum' => [

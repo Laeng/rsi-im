@@ -5,8 +5,8 @@ namespace App\Services\RSI;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Client\Response as ClientResponse;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class RsiService implements RsiServiceInterface
@@ -51,6 +51,8 @@ class RsiService implements RsiServiceInterface
                 'password' => $password,
                 'captcha' => $captcha
             ]);
+
+        $this->setUsername($session, $username);
 
         return $this->getResult($session, $response);
     }
@@ -136,6 +138,23 @@ class RsiService implements RsiServiceInterface
         return $this->getResult($session, $response);
     }
 
+    public function release(string $claims, string $channel, string $game): array
+    {
+        $url = $this->base . config('services.rsi.main.release');
+        $session = request()->session();
+
+        $response = Http::acceptJson()
+            ->timeout(5)
+            ->withHeaders($this->getHeaders($session))
+            ->post($url, [
+                'claims' => $claims,
+                'channelId' => $channel,
+                'gameId' => $game
+            ]);
+
+        return $this->getResult($session, $response);
+    }
+
 
     public function spectrum(): array
     {
@@ -183,6 +202,16 @@ class RsiService implements RsiServiceInterface
             config('services.rsi.header.one.key') => $one,
             config('services.rsi.header.two.key') => $two
         ]);
+    }
+
+    public function setUsername(Session $session, string $username): void
+    {
+        $session->put('RSI_USERNAME', Crypt::encryptString($username));
+    }
+
+    public function getUsername(Session $session): string
+    {
+        return $session->has('RSI_USERNAME') ? Crypt::decryptString($session->get('RSI_USERNAME')) : '';
     }
 
     private function getResult(Session $session, ClientResponse $response): array

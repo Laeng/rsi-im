@@ -3,7 +3,7 @@
         <div>
             <ul class="text-sm text-gray-500 space-y-2">
                 <li>
-                    <p>We don't store your email, password and Multi-Factor authentication code. You can review the source code for this service <a href="#" class="underline decoration-dotted hover:text-indigo-500" target="_blank">here</a>.</p>
+                    <p>We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href="#" class="underline decoration-dotted hover:text-indigo-500" target="_blank">here</a>.</p>
                 </li>
                 <li>
                     <p>This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.</p>

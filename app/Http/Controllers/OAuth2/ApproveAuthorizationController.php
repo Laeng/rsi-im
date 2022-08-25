@@ -9,7 +9,7 @@ use Laravel\Passport\Http\Controllers\RetrievesAuthRequestFromSession;
 use League\OAuth2\Server\AuthorizationServer;
 use Nyholm\Psr7\Response as Psr7Response;
 
-class ApproveAuthorizationController
+class ApproveAuthorizationController extends  \Laravel\Passport\Http\Controllers\ApproveAuthorizationController
 {
     use ConvertsPsrResponses, RetrievesAuthRequestFromSession;
 
@@ -18,7 +18,7 @@ class ApproveAuthorizationController
      *
      * @var AuthorizationServer
      */
-    protected AuthorizationServer $server;
+    protected $server;
 
     /**
      * Create a new controller instance.
@@ -28,6 +28,8 @@ class ApproveAuthorizationController
      */
     public function __construct(AuthorizationServer $server)
     {
+        parent::__construct($server);
+
         $this->server = $server;
     }
 

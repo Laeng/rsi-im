@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Laravel\Passport\Bridge\User as PassportUser;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Http\Controllers\HandlesOAuthErrors;
@@ -17,7 +19,7 @@ use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Nyholm\Psr7\Response as Psr7Response;
 use Psr\Http\Message\ServerRequestInterface;
 
-class AuthorizationController
+class AuthorizationController extends  \Laravel\Passport\Http\Controllers\AuthorizationController
 {
     use HandlesOAuthErrors;
 
@@ -26,14 +28,14 @@ class AuthorizationController
      *
      * @var AuthorizationServer
      */
-    protected AuthorizationServer $server;
+    protected $server;
 
     /**
      * The response factory implementation.
      *
      * @var ResponseFactory
      */
-    protected ResponseFactory $response;
+    protected $response;
 
     /**
      * Create a new controller instance.
@@ -44,6 +46,7 @@ class AuthorizationController
      */
     public function __construct(AuthorizationServer $server, ResponseFactory $response)
     {
+        parent::__construct($server, $response);
         $this->server = $server;
         $this->response = $response;
     }
@@ -51,16 +54,16 @@ class AuthorizationController
     /**
      * Authorize a client to access the user's account.
      *
-     * @param ServerRequestInterface $psrRequest
+     * @param  \Psr\Http\Message\ServerRequestInterface  $psrRequest
      * @param Request $request
      * @param ClientRepository $clients
      * @param TokenRepository $tokens
-     * @return Response
+     * @return Response|InertiaResponse
      */
     public function authorize(ServerRequestInterface $psrRequest,
                               Request $request,
                               ClientRepository $clients,
-                              TokenRepository $tokens): Response
+                              TokenRepository $tokens): Response|InertiaResponse
     {
         $authRequest = $this->withErrorHandling(function () use ($psrRequest) {
             return $this->server->validateAuthorizationRequest($psrRequest);
@@ -81,47 +84,17 @@ class AuthorizationController
         $request->session()->put('authToken', $authToken = Str::random());
         $request->session()->put('authRequest', $authRequest);
 
-        return $this->response->view('passport::authorize', [
-            'client' => $client,
-            'user' => $user,
-            'scopes' => $scopes,
-            'request' => $request,
+        return Inertia::render('auth/authorize', [
+            'client' => [
+                'id' => $client->getAttribute('id'),
+                'name' => $client->getAttribute('name')
+            ],
+            'request' => [
+                'state' => $request->get('state')
+            ],
             'authToken' => $authToken,
+            'scopes' => $scopes
         ]);
     }
 
-    /**
-     * Transform the authorization requests's scopes into Scope instances.
-     *
-     * @param  AuthorizationRequest  $authRequest
-     * @return array
-     */
-    protected function parseScopes(AuthorizationRequest $authRequest): array
-    {
-        return Passport::scopesFor(
-            collect($authRequest->getScopes())->map(function ($scope) {
-                return $scope->getIdentifier();
-            })->unique()->all()
-        );
-    }
-
-    /**
-     * Approve the authorization request.
-     *
-     * @param  AuthorizationRequest  $authRequest
-     * @param Model $user
-     * @return Response
-     */
-    protected function approveRequest(AuthorizationRequest $authRequest, Model $user): Response
-    {
-        $authRequest->setUser(new PassportUser($user->getAuthIdentifier()));
-
-        $authRequest->setAuthorizationApproved(true);
-
-        return $this->withErrorHandling(function () use ($authRequest) {
-            return $this->convertResponse(
-                $this->server->completeAuthorizationRequest($authRequest, new Psr7Response)
-            );
-        });
-    }
 }

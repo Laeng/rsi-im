@@ -8,9 +8,6 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
-
-
-
 Route::name('oauth2.authorization.')->prefix('oauth2')->middleware('auth:web')->group(function () {
     Route::get('authorize', [AuthorizationController::class, 'authorize'])->name('authorize');
     Route::post('authorize', [ApproveAuthorizationController::class, 'approve'])->name('approve');
@@ -21,4 +18,3 @@ Route::name('oauth2.token.')->prefix('oauth2')->withoutMiddleware([VerifyCsrfTok
     Route::post('token', [AccessTokenController::class, 'issueToken'])->middleware(['throttle'])->name('issue');
     Route::post('token/refresh', [TransientTokenController::class, 'refresh'])->middleware('auth:web')->name('refresh');
 });
-

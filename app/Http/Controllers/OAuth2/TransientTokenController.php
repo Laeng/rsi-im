@@ -6,14 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Laravel\Passport\ApiTokenCookieFactory;
 
-class TransientTokenController
+class TransientTokenController extends \Laravel\Passport\Http\Controllers\TransientTokenController
 {
     /**
      * The cookie factory instance.
      *
      * @var ApiTokenCookieFactory
      */
-    protected ApiTokenCookieFactory $cookieFactory;
+    protected $cookieFactory;
 
     /**
      * Create a new controller instance.
@@ -23,19 +23,12 @@ class TransientTokenController
      */
     public function __construct(ApiTokenCookieFactory $cookieFactory)
     {
+        parent::__construct($cookieFactory);
         $this->cookieFactory = $cookieFactory;
     }
 
-    /**
-     * Get a fresh transient token cookie for the authenticated user.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function refresh(Request $request): Response
+    public function refresh(Request $request)
     {
-        return (new Response('Refreshed.'))->withCookie($this->cookieFactory->make(
-            $request->user()->getAuthIdentifier(), $request->session()->token()
-        ));
+        return new Response('Not Implemented', '501');
     }
 }
