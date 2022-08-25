@@ -46,8 +46,8 @@
         <div class="space-y-4">
             <info-alert title="Requesting permission"><b class="font-semibold">{{ props.client.name }}</b> is requesting permission to access your account.</info-alert>
             <div class="p-4 border border border-gray-300 bg-white rounded-md shadow-md dark:shadow-gray-600/50 dark:bg-gray-700 dark:text-white dark:border-gray-600">
-                <ul role="list" class="-my-5 divide-y divide-gray-300 dark:divide-gray-600">
-                    <li v-for="scope in props.scopes" class="py-5">
+                <ul role="list" class="-my-4 divide-y divide-gray-300 dark:divide-gray-600">
+                    <li v-for="scope in props.scopes" class="py-4">
                         <div class="relative">
                             <h3 class="text-sm font-semibold text-gray-800 dark:text-white">
                                 {{ scope.id }}

@@ -27,8 +27,10 @@ class TransientTokenController extends \Laravel\Passport\Http\Controllers\Transi
         $this->cookieFactory = $cookieFactory;
     }
 
+    /*
     public function refresh(Request $request)
     {
         return new Response('Not Implemented', '501');
     }
+    */
 }
