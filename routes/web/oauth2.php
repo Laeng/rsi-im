@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\OAuth2\ApproveAuthorizationController;
 use App\Http\Controllers\OAuth2\AuthorizationController;
-use App\Http\Controllers\OAuth2\DenyAuthorizationController;
 use App\Http\Controllers\OAuth2\TransientTokenController;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
+use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
+use Laravel\Passport\Http\Controllers\DenyAuthorizationController;
 
 Route::name('oauth2.authorization.')->prefix('oauth2')->middleware('auth:web')->group(function () {
     Route::get('authorize', [AuthorizationController::class, 'authorize'])->name('authorize');

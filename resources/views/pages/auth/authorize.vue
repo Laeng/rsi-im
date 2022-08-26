@@ -1,42 +1,42 @@
 <script setup lang="ts">
-    import AuthLayout from "@/views/layouts/auth.vue";
-    import {useForm} from "@inertiajs/inertia-vue3";
-    import PrimaryButton from "@/views/components/button/primary-button.vue";
-    import SecondaryButton from "@/views/components/button/secondary-button.vue";
-    import InfoAlert from "@/views/components/alert/info-alert.vue";
-    import axios from "axios";
+import AuthLayout from "@/views/layouts/auth.vue";
+import {useForm} from "@inertiajs/inertia-vue3";
+import PrimaryButton from "@/views/components/button/primary-button.vue";
+import SecondaryButton from "@/views/components/button/secondary-button.vue";
+import InfoAlert from "@/views/components/alert/info-alert.vue";
+import axios from "axios";
 
-    const props = defineProps({
-        client: {
-            type: Object,
-            default: {
-                id: '',
-                name: ''
-            }
-        },
-        request: {
-            type: Object,
-            default: {
-                state: ''
-            }
-        },
-        authToken: String,
-        scopes: Array
-    });
+const props = defineProps({
+    client: {
+        type: Object,
+        default: {
+            id: '',
+            name: ''
+        }
+    },
+    request: {
+        type: Object,
+        default: {
+            state: ''
+        }
+    },
+    authToken: String,
+    scopes: Array
+});
 
-    const form = useForm({
-        state: props.request?.state,
-        client_id: props.client?.id,
-        auth_token: props.authToken
-    });
+const form = useForm({
+    state: props.request?.state,
+    client_id: props.client?.id,
+    auth_token: props.authToken
+});
 
-    const approvePermission = () => {
-        form.post(route('oauth2.authorization.approve'), {});
-    };
+const approvePermission = () => {
+    form.post(route('oauth2.authorization.approve'), {});
+};
 
-    const denyPermission = () => {
-        form.delete(route('oauth2.authorization.deny'), {});
-    };
+const denyPermission = () => {
+    form.delete(route('oauth2.authorization.deny'), {});
+};
 
 </script>
 
@@ -68,5 +68,28 @@
 </template>
 
 <style scoped>
+.font-semibold {
+    font-weight: 600;
+}
+
+.yellow-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-items: center;
+    border-radius: 9999px;
+    background-color: #fef9c3;
+    padding: .125rem .625rem;
+    font-size: .75rem;
+    line-height: 1rem;
+    font-weight: 500;
+    color: #854d0e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .yellow-badge {
+        background-color: #fef08a;
+        color: #713f12;
+    }
+}
 
 </style>

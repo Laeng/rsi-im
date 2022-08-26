@@ -27,14 +27,14 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::tokensCan([
-            'launch-game' => 'Provides information to run the game. Third parties may execute the game using your account.',
-            'list-of-games' => 'Provides a list of games you have pledge.',
-            'list-of-organizations' => 'Provides a list of organizations to which you have joined.',
-            'basic-info' => 'Provide your unique account number, nickname, display name, badge list, and avatar image.'
+            'profile' => 'profile',
+            'joined-organizations' => 'joined_organizations',
+            'owned-games' => 'owned_games',
+            'launch-game' => 'launch_game'
         ]);
 
         Passport::setDefaultScope([
-            'basic-info',
+            'profile',
         ]);
     }
 }

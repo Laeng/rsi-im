@@ -7,10 +7,12 @@ import PrimaryButton from "@/views/components/button/primary-button.vue";
 import NativeSelect from "@/views/components/select/native-select.vue";
 import {reactive, watchEffect} from "vue";
 import ErrorAlert from "@/views/components/alert/error-alert.vue";
+import InputDescription from "@/views/components/input/input-description.vue";
 
 const props = defineProps({
     code: String,
     message: String,
+    errors: Object,
 });
 
 const form = useForm({
@@ -52,8 +54,9 @@ watchEffect(() => {
             <div>
                 <input-label for="code" value="Authentication Code"/>
                 <div class="mt-1">
-                    <text-input id="code" placeholder="Code" v-model="form.code" required/>
+                    <text-input id="code" placeholder="code" v-model="form.code" required/>
                 </div>
+                <input-description class="mt-1" :is-error="props.errors?.code !== undefined" :message="props.errors?.code"/>
             </div>
             <div>
                 <input-label for="duration" value="Trust this device for"/>
@@ -62,6 +65,7 @@ watchEffect(() => {
                         <option value="session">This session only</option>
                     </native-select>
                 </div>
+                <input-description class="mt-1" :is-error="props.errors?.duration !== undefined" :message="props.errors?.duration"/>
             </div>
             <div>
                 <primary-button>

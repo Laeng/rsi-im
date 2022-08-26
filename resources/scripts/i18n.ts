@@ -1,11 +1,10 @@
 import { nextTick } from 'vue'
-import {createI18n, I18n} from 'vue-i18n'
+import {createI18n, I18n, I18nOptions} from 'vue-i18n'
 
-export const SUPPORT_LOCALES = ['en', 'ko']
 
-export function setupI18n(options = { locale: 'en' }) {
+export function setupI18n(options:I18nOptions = { locale: 'en' }) {
     const i18n = createI18n(options)
-    setI18nLanguage(i18n, options.locale)
+    setI18nLanguage(i18n, options.locale as string)
     return i18n
 }
 

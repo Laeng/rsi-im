@@ -40,7 +40,7 @@ class AuthenticateController
             'ErrMultiStepRequired',
             'ErrMultiStepExpired',
             'ErrMultiStepWrongCode' => Inertia::render('auth/multi-factor', $data),
-            default => Inertia::render('auth/basic', $data),
+            default => Inertia::render('auth/sign-in', $data),
         };
     }
 

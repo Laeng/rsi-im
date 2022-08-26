@@ -1,0 +1,66 @@
+{
+    "common": {
+
+    },
+    "auth": {
+        "text_service_subtitle": "Unofficial RSI Account Authorization Service",
+        "text_service_description_1": "We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href=\"#\" class=\"decorate-link\" target=\"_blank\">here</a>.",
+        "text_service_description_2": "This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.",
+        "text_service_description_3": "",
+        "text_service_description_4": "",
+        "text_service_description_5": "",
+        "link_privacy_policy": "Privacy Policy",
+        "sign_in": {
+            "alert_check_hostname_title": "Don't forget!",
+            "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <b class=\"accent-text\">rsi.im</b>.",
+            "form_email_label": "EMAIL",
+            "form_email_placeholder": "someone@example.com",
+            "form_password_label": "PASSWORD",
+            "form_password_placeholder": "••••••••••••••••",
+            "form_captcha_label": "CAPTCHA",
+            "form_captcha_placeholder": "4 digits numbers",
+            "form_captcha_refresh_sr": "Refresh captcha image",
+            "form_sign_in_button": "Sign in",
+            "link_what_is_this": "What is this? Is it safe?",
+            "link_account_recovery": "Account Recovery"
+        },
+        "multi-factor": {
+            "form_code_label": "Authentication Code",
+            "form_code_placeholder": "code",
+            "form_code_message": "Enter the code sent to your email or from your authenticator. Alternatively use a backup code.",
+            "form_duration_label": "Trust this service for",
+            "form_duration_options": {
+                "session": "This session only",
+                "day": "1 day",
+                "week": "1 week",
+                "month": "1 month",
+                "year": "1 year"
+            },
+            "form_authenticate_button": "Authenticate"
+        },
+        "authorize": {
+            "alert_request_permission_title": "Requesting permission",
+            "alert_request_permission_message": "<b class=\"font-semibold\">{ name }</b> would like the ability access following data in your RSI Account.",
+            "text_scope_options": {
+                "profile": {
+                    "title": "Profile",
+                    "description": "The service can be read your unique account number, nickname, display name, avatar, and badges."
+                },
+                "joined_organizations": {
+                    "title": "Joined organization",
+                    "description": "The service can collect that organization you join. This data is included organization's name, avatar, and banner information that you join."
+                },
+                "owned_games": {
+                    "title": "Owned games",
+                    "description": "The service can check which games you have. This data is included game's id and name."
+                },
+                "launch_game": {
+                    "title": "Launch game",
+                    "description": "<span class=\"yellow-badge\">Caution</b> The service may launch game using your account data. This data is included your email, session id, and unique token. Please allow only trusted apps for your account secure."
+                }
+            },
+            "form_authorize_button": "Allow",
+            "form_cancel_button": "Deny"
+        }
+    }
+}

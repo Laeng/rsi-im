@@ -9,6 +9,15 @@
                     <p>This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.</p>
                 </li>
                 <li>
+                    <p></p>
+                </li>
+                <li>
+                    <p></p>
+                </li>
+                <li>
+                    <p></p>
+                </li>
+                <li class="flex">
                     <Link :href="route('login')" class="underline decoration-dotted hover:text-indigo-500" target="_blank">
                         Privacy Policy
                     </Link>
@@ -33,5 +42,11 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 </script>
 
 <style scoped>
-
+.decorate-link {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+}
+.decorate-link:hover {
+    color: rgb(99 102 241);
+}
 </style>
