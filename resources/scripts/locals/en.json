@@ -13,18 +13,18 @@
         "sign_in": {
             "alert_check_hostname_title": "Don't forget!",
             "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <b class=\"accent-text\">rsi.im</b>.",
-            "form_email_label": "EMAIL",
+            "form_email_label": "Email",
             "form_email_placeholder": "someone@example.com",
-            "form_password_label": "PASSWORD",
+            "form_password_label": "Password",
             "form_password_placeholder": "••••••••••••••••",
-            "form_captcha_label": "CAPTCHA",
+            "form_captcha_label": "Captcha",
             "form_captcha_placeholder": "4 digits numbers",
             "form_captcha_refresh_sr": "Refresh captcha image",
             "form_sign_in_button": "Sign in",
             "link_what_is_this": "What is this? Is it safe?",
             "link_account_recovery": "Account Recovery"
         },
-        "multi-factor": {
+        "multi_factor": {
             "form_code_label": "Authentication Code",
             "form_code_placeholder": "code",
             "form_code_message": "Enter the code sent to your email or from your authenticator. Alternatively use a backup code.",

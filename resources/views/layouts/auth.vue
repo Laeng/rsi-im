@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import NativeSelect from "@/views/components/select/native-select.vue";
 import AuthHeader from "@/views/components/auth/auth-header.vue";
 import AuthFooter from "@/views/components/auth/auth-footer.vue";
 import BasicLayout from "@/views/layouts/basic.vue";
+import LocaleSelect from "@/views/components/select/locale-select.vue";
+
+
 </script>
 
 <template>
@@ -12,10 +14,7 @@ import BasicLayout from "@/views/layouts/basic.vue";
                 <div class="max-w-3xl mx-auto p-4 sm:px-6 lg:px-8">
                     <div class="flex justify-end">
                         <div>
-                            <native-select>
-                                <option value="">맵 선택</option>
-                                <option value="ETC">기타</option>
-                            </native-select>
+                            <locale-select/>
                         </div>
                     </div>
                 </div>
@@ -34,5 +33,6 @@ import BasicLayout from "@/views/layouts/basic.vue";
         </div>
     </basic-layout>
 </template>
+
 
 

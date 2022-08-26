@@ -28,8 +28,8 @@ const alert = reactive({
 const submit = () => {
     form.post(route('login.multi-factor'), {
         onFinish: () => {
-            form.reset('code');
-            form.reset('duration');
+            form.code = '';
+            form.duration = 'session';
         },
     });
 };
@@ -52,24 +52,28 @@ watchEffect(() => {
                 </error-alert>
             </div>
             <div>
-                <input-label for="code" value="Authentication Code"/>
+                <input-label for="code" :value="$t('auth.multi_factor.form_code_label')"/>
                 <div class="mt-1">
                     <text-input id="code" placeholder="code" v-model="form.code" required/>
                 </div>
                 <input-description class="mt-1" :is-error="props.errors?.code !== undefined" :message="props.errors?.code"/>
             </div>
             <div>
-                <input-label for="duration" value="Trust this device for"/>
+                <input-label for="duration" :value="$t('auth.multi_factor.form_duration_label')"/>
                 <div class="mt-1">
                     <native-select v-model="form.duration">
-                        <option value="session">This session only</option>
+                        <option value="session">{{ $t('auth.multi_factor.form_duration_options.session') }}</option>
+                        <option value="day">{{ $t('auth.multi_factor.form_duration_options.day') }}</option>
+                        <option value="week">{{ $t('auth.multi_factor.form_duration_options.week') }}</option>
+                        <option value="month">{{ $t('auth.multi_factor.form_duration_options.month') }}</option>
+                        <option value="year">{{ $t('auth.multi_factor.form_duration_options.year') }}</option>
                     </native-select>
                 </div>
                 <input-description class="mt-1" :is-error="props.errors?.duration !== undefined" :message="props.errors?.duration"/>
             </div>
             <div>
                 <primary-button>
-                    Authenticate
+                    {{ $t('auth.multi_factor.form_authenticate_button') }}
                 </primary-button>
             </div>
         </form>

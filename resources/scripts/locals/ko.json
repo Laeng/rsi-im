@@ -5,14 +5,14 @@
     "auth": {
         "text_service_subtitle": "비공식 RSI 계정 인증 서비스",
         "text_service_description_1": "저희는 여러분의 비밀번호와 다중 인증 코드를 저장하지 않습니다. 이 서비스에 대한 소스 코드는 <a href=\"#\" class=\"decorate-link\" target=\"_blank\">여기</a>에서 확인할 수 있습니다.",
-        "text_service_description_2": "이 서비스는 클라우드 임페리움 또는 로버츠 스페이스 인더스트리얼즈 그룹 및 자회사에서 보증과 제휴하지 않습니다.",
+        "text_service_description_2": "이 서비스는 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴하지 않습니다.",
         "text_service_description_3": "",
         "text_service_description_4": "",
         "text_service_description_5": "",
         "link_privacy_policy": "개인정보취급방침",
         "sign_in": {
             "alert_check_hostname_title": "잊지 마십시오!",
-            "alert_check_hostname_message": "여러분의 RSI 계정에 대한 안전을 위해 웹 사이트 주소를 확인해 주십시오. 본 서비스에 대한 올바른 주소는 <b class=\"accent-text\">rsi.im</b> 입니다.",
+            "alert_check_hostname_message": "여러분의 RSI 계정에 대한 안전을 위해 웹 사이트 주소를 확인해주십시오. 본 서비스의 올바른 주소는 <b class=\"accent-text\">rsi.im</b> 입니다.",
             "form_email_label": "이메일",
             "form_email_placeholder": "someone@example.com",
             "form_password_label": "비밀번호",
@@ -24,7 +24,7 @@
             "link_what_is_this": "이것은 무엇 입니까? 안전 합니까?",
             "link_account_recovery": "계정 복구"
         },
-        "multi-factor": {
+        "multi_factor": {
             "form_code_label": "인증 코드",
             "form_code_placeholder": "코드",
             "form_code_message": "여러분의 이메일 또는 OTP에 나타난 코드를 입력해 주십시오. 코드를 확인할 수 없다면 백업 코드를 대신 사용할 수 있습니다.",

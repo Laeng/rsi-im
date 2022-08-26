@@ -1,12 +1,10 @@
-//import axios from 'axios';
 import InertiaProgress from "@/scripts/progress";
-//import lodash from 'lodash';
+import VueCookies from 'vue-cookies'
 
-import { createApp, h } from 'vue';
-import { createI18n } from 'vue-i18n';
+import {createApp, h, watch} from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { resolvePageComponent } from 'vite-plugin-laravel/inertia';
-import {loadLocaleMessages, setupI18n} from "@/scripts/i18n";
+import {loadLocaleMessages, setI18nLanguage, setupI18n} from "@/scripts/i18n";
 
 declare global {
     interface Window {
@@ -28,10 +26,12 @@ createInertiaApp({
             locale: props.initialPage.props.locale as string,
             fallbackLocale: 'en',
         })
+        vue.use(plugin).use(i18n).use(VueCookies).mixin({methods: {route: window.route}}).mount(el);
 
-        vue.use(plugin).use(i18n).mixin({methods: {route: window.route}}).mount(el);
 
         loadLocaleMessages(i18n, props.initialPage.props.locale as string).then();
+
+
     },
 }).then();
 

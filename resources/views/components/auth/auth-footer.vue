@@ -3,30 +3,28 @@
         <div>
             <ul class="text-sm text-gray-500 space-y-2">
                 <li>
-                    <p>We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href="#" class="underline decoration-dotted hover:text-indigo-500" target="_blank">here</a>.</p>
+                    <p v-html="$t('auth.text_service_description_1')"></p>
                 </li>
                 <li>
-                    <p>This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.</p>
+                    <p v-html="$t('auth.text_service_description_2')"></p>
                 </li>
                 <li>
-                    <p></p>
+                    <p v-html="$t('auth.text_service_description_3')"></p>
                 </li>
                 <li>
-                    <p></p>
+                    <p v-html="$t('auth.text_service_description_4')"></p>
                 </li>
                 <li>
-                    <p></p>
+                    <p v-html="$t('auth.text_service_description_5')"></p>
                 </li>
                 <li class="flex">
-                    <Link :href="route('login')" class="underline decoration-dotted hover:text-indigo-500" target="_blank">
-                        Privacy Policy
-                    </Link>
+                    <Link :href="route('login')" class="underline decoration-dotted hover:text-indigo-500" target="_blank" v-html="$t('auth.link_privacy_policy')"></Link>
                 </li>
                 <li>
                     <div class="flex justify-center space-x-2 items-end pt-6">
                         <div>
                             <p class="text-xs text-gray-400 dark:text-gray-600 mb-0.5">Developed by</p>
-                            <a href="https://github.com/laeng" target="_blank" rel="nofollow"><laeng-co-logo class="h-6 w-auto fill-current text-gray-400 dark:text-gray-600"/></a>
+                            <a href="https://github.com/laeng" target="_blank" rel="nofollow"><laeng-co-logo class="h-6 w-auto fill-current text-gray-400 dark:text-gray-600 hover:text-rose-600"/></a>
                         </div>
                     </div>
                 </li>

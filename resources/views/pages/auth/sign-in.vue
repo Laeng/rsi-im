@@ -66,25 +66,6 @@ const refreshCaptcha = () => {
     }
 }
 
-/*
-watch(() => props.code, (code, oldCode) => {
-    if (code !== 'OK') {
-        alert.show = true;
-    }
-
-    switch (code) {
-        case 'ErrCaptchaRequiredLauncher':
-        case 'ErrInvalidChallengeCode':
-            isCaptchaLoad = true;
-            captcha.show = true;
-            refreshCaptcha();
-            break;
-        default:
-            break;
-    }
-});
-*/
-
 watchEffect(() => {
     alert.show = (props.code !== 'OK');
 
@@ -109,9 +90,9 @@ watchEffect(() => {
     <auth-layout>
         <form @submit.prevent="submit" class="space-y-6">
             <div>
-                <info-alert v-show="!alert.show" title="Don't forget!">
+                <info-alert v-show="!alert.show" :title="$t('auth.sign_in.alert_check_hostname_title')">
                     <ul>
-                        <li>For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <strong class="font-semibold underline decoration-dotted">rsi.im</strong>.</li>
+                        <li v-html="$t('auth.sign_in.alert_check_hostname_message')"></li>
                     </ul>
                 </info-alert>
                 <error-alert v-show="alert.show" title="ERROR">
@@ -121,46 +102,52 @@ watchEffect(() => {
                 </error-alert>
             </div>
             <div>
-                <input-label for="email" value="Email"/>
+                <input-label for="email" :value="$t('auth.sign_in.form_email_label')"/>
                 <div class="mt-1">
-                    <text-input name="email" id="email" placeholder="someone@example.com" v-model="form.username" required autofocus/>
+                    <text-input name="email" id="email" :placeholder="$t('auth.sign_in.form_email_placeholder')" v-model="form.username" required autofocus/>
                 </div>
                 <input-description class="mt-1" :is-error="props.errors?.username !== undefined" :message="props.errors?.username"/>
             </div>
             <div>
-                <input-label for="password" value="Password"/>
+                <input-label for="password" :value="$t('auth.sign_in.form_password_label')"/>
                 <div class="mt-1">
-                    <text-input name="password" id="password" type="password" placeholder="••••••••••••••••" v-model="form.password" required/>
+                    <text-input name="password" id="password" type="password" :placeholder="$t('auth.sign_in.form_password_placeholder')" v-model="form.password" required/>
                 </div>
                 <input-description class="mt-1" :is-error="props.errors?.password !== undefined" :message="props.errors?.password"/>
             </div>
             <div v-show="captcha.show">
-                <input-label for="captcha" value="Captcha"/>
+                <input-label for="captcha" :value="$t('auth.sign_in.form_captcha_label')"/>
                 <div class="mt-1 relative">
                     <div class="bg-black rounded-md w-full select-none flex justify-center shadow-sm">
                         <img class="h-28" :src="captcha.src" alt="captcha"/>
                     </div>
                     <div class="text-gray-500 hover:text-gray-300 md:text-sm absolute bottom-1 right-2 cursor-pointer mb-1" @click="refreshCaptcha">
                         <RefreshIcon class="h-5 w-5" :class="{'icon-spin': captcha.reload}"></RefreshIcon>
-                        <p class="sr-only">reload image captcha</p>
+                        <p class="sr-only">
+                            {{ $t('auth.sign_in.form_captcha_refresh_sr') }}
+                        </p>
                     </div>
                 </div>
                 <div class="mt-1">
-                    <text-input id="captcha" placeholder="4 digits numbers" v-model="form.captcha"/>
+                    <text-input id="captcha" :placeholder="$t('auth.sign_in.form_captcha_placeholder')" v-model="form.captcha"/>
                 </div>
                 <input-description class="mt-1" :is-error="props.errors?.captcha !== undefined" :message="props.errors?.captcha"/>
             </div>
             <div class="flex items-center justify-between">
                 <div class="text-sm">
-                    <a href="#" class="font-medium text-gray-600 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300" target="_blank">What is this? Is it safe?</a>
+                    <a href="#" class="font-medium text-gray-600 hover:text-gray-500 dark:text-gray-400 dark:hover:text-gray-300" target="_blank">
+                        {{ $t('auth.sign_in.link_what_is_this') }}
+                    </a>
                 </div>
                 <div class="text-sm">
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300" target="_blank">Account Recovery</a>
+                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300" target="_blank">
+                        {{ $t('auth.sign_in.link_account_recovery') }}
+                    </a>
                 </div>
             </div>
             <div>
                 <primary-button>
-                    Sign in
+                    {{ $t('auth.sign_in.form_sign_in_button') }}
                 </primary-button>
             </div>
         </form>

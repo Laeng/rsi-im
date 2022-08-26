@@ -44,24 +44,30 @@ const denyPermission = () => {
 <template>
     <auth-layout>
         <div class="space-y-4">
-            <info-alert title="Requesting permission"><b class="font-semibold">{{ props.client.name }}</b> is requesting permission to access your account.</info-alert>
+            <info-alert :title="$t('auth.authorize.alert_request_permission_title')">
+                {{ $t('auth.authorize.alert_request_permission_message', { name: props.client.name }) }}
+            </info-alert>
             <div class="p-4 border border border-gray-300 bg-white rounded-md shadow-md dark:shadow-gray-600/50 dark:bg-gray-700 dark:text-white dark:border-gray-600">
                 <ul role="list" class="-my-4 divide-y divide-gray-300 dark:divide-gray-600">
                     <li v-for="scope in props.scopes" class="py-4">
                         <div class="relative">
                             <h3 class="text-sm font-semibold text-gray-800 dark:text-white">
-                                {{ scope.id }}
+                                {{ $t(`auth.authorize.text_scope_options.${scope.description}.title`) }}
                             </h3>
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-                                {{ scope.description }}
+                                {{ $t(`auth.authorize.text_scope_options.${scope.description}.description`) }}
                             </p>
                         </div>
                     </li>
                 </ul>
             </div>
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
-                <primary-button @click="approvePermission">Authorize</primary-button>
-                <secondary-button @click="denyPermission">Cancel</secondary-button>
+                <primary-button @click="approvePermission">
+                    {{ $t('auth.authorize.form_authorize_button') }}
+                </primary-button>
+                <secondary-button @click="denyPermission">
+                    {{ $t('auth.authorize.form_cancel_button') }}
+                </secondary-button>
             </div>
         </div>
     </auth-layout>
