@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Repositories\User\Interfaces;
+namespace App\Repositories\Device\Interfaces;
 
 use App\Models\User;
 use App\Repositories\Base\Interfaces\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 
-interface UserRepositoryInterface extends EloquentRepositoryInterface
+interface DeviceRepositoryInterface extends EloquentRepositoryInterface
 {
     public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection;
-
-    public function findByAccountId(string $accountId, array $columns = ['*'], array $relations = []): user;
-
-    public function findByAccountIds(array $accountIds, array $columns = ['*'], array $relations = []): Collection;
 
     public function pagination(int $offset = 0, int $limit = 10, array $columns = ['*'], array $relations = []): ?Collection;
 

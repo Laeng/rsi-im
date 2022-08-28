@@ -5,7 +5,7 @@ namespace App\Services\User;
 
 
 use App\Models\User;
-use App\Repositories\User\Interfaces\UserRepositoryInterface;
+use App\Repositories\User\Interfaces\DeviceRepositoryInterface;
 use App\Services\User\Interfaces\UserServiceInterface;
 
 /**
@@ -14,9 +14,9 @@ use App\Services\User\Interfaces\UserServiceInterface;
  */
 class UserService implements UserServiceInterface
 {
-    private UserRepositoryInterface $userRepository;
+    private DeviceRepositoryInterface $userRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(DeviceRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }

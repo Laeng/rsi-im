@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_games', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('account_id')->unique()->index();
-            $table->longText('data')->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_games');
     }
 };
