@@ -2,36 +2,30 @@
 
 namespace App\Repositories\Device;
 
-use App\Models\User;
+use App\Models\Device;
 use App\Repositories\Base\BaseRepository;
 use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 use JetBrains\PhpStorm\Pure;
 
 class DeviceRepository extends BaseRepository implements DeviceRepositoryInterface
 {
-    public User $model;
+    public Device $model;
 
     #[Pure]
-    public function __construct(User $model)
+    public function __construct(Device $model)
     {
         parent::__construct($model);
 
         $this->model = $model;
     }
 
-    public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection
+    public function findByUuid(string $uuid, array $columns = ['*'], array $relations = []): ?Device
     {
-        return $this->model->select($columns)->whereIn('id', $ids)->with($relations)->latest()->get();
+        return $this->model->select($columns)->where('uuid', $uuid)->with($relations)->latest()->first();
     }
 
-    public function pagination(int $offset = 0, int $limit = 10, array $columns = ['*'], array $relations = []): ?Collection
+    public function findByUserId(string $userId, array $columns = ['*'], array $relations = []): ?Device
     {
-        return $this->model->select($columns)->with($relations)->offset($offset)->limit($limit)->latest()->get();
-    }
-
-    public function new(): User
-    {
-        return new User();
+        return $this->model->select($columns)->where('user_id', $userId)->with($relations)->latest()->first();
     }
 }

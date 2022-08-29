@@ -2,15 +2,13 @@
 
 namespace App\Repositories\Device\Interfaces;
 
-use App\Models\User;
+use App\Models\Device;
 use App\Repositories\Base\Interfaces\EloquentRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
+
 
 interface DeviceRepositoryInterface extends EloquentRepositoryInterface
 {
-    public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection;
+    public function findByUserId(string $userId, array $columns = ['*'], array $relations = []): ?Device;
 
-    public function pagination(int $offset = 0, int $limit = 10, array $columns = ['*'], array $relations = []): ?Collection;
-
-    public function new(): User;
+    public function findByUuid(string $uuid, array $columns = ['*'], array $relations = []): ?Device;
 }
