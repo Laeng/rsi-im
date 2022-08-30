@@ -3,6 +3,11 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -41,10 +46,28 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $e): Response|JsonResponse|SymfonyResponse|RedirectResponse
+    {
+        $response = parent::render($request, $e);
+
+        if (!app()->environment(['local', 'testing']) && in_array($response->status(), [500, 503, 404, 403])) {
+            return Inertia::render('error/index', ['status' => $response->status()])
+                ->toResponse($request)
+                ->setStatusCode($response->status());
+
+        } else if ($response->status() === 419) {
+            return back()->with([
+                'message' => 'The page expired, please try again.',
+            ]);
+        }
+
+        return $response;
     }
 }
