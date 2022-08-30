@@ -9,6 +9,7 @@ use App\Services\User\Interfaces\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -24,7 +25,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * [GET] front of sign-in page.
+     * [GET] Front of sign-in page.
      *
      * @link /connect
      * @param Request $request
@@ -44,7 +45,26 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * [POST] check captcha code
+     * [GET] Sign-out page.
+     *
+     * @link /disconnect
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function signOut(Request $request): RedirectResponse
+    {
+        if (Auth::check()) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerate();
+        }
+
+        return redirect()->route('welcome');
+    }
+
+    /**
+     * [POST] Check captcha code
      *
      * @link /connect/captcha
      * @param Request $request
@@ -72,7 +92,7 @@ class AuthenticateController extends Controller
     }
 
     /**
-     * [POST] check multi factor authorize code.
+     * [POST] Check multi factor authorize code.
      *
      * @link /connect/multi-factor
      * @param Request $request
@@ -96,18 +116,23 @@ class AuthenticateController extends Controller
             ];
 
         } else {
+            $code = $request->get('code');
+            $duration = $request->get('duration');
+
             $receiveData = $this->rsiService->verifyMultiFactor(
                 $device,
-                $request->get('code'),
-                $request->get('duration')
+                $code,
+                $duration
             );
+
+            $request->session()->put('duration', $duration);
         }
 
         return $this->response($request, $receiveData);
     }
 
     /**
-     * [POST] process sing-in
+     * [POST] Process sing-in
      *
      * @link /connect/process
      * @param Request $request
@@ -128,18 +153,34 @@ class AuthenticateController extends Controller
         $deviceHash = $this->rsiService->createDeviceHash($request->getClientIp(), $username);
         $device = $this->rsiService->getDevice('hash', $deviceHash);
 
-        $request->session()->put('device_id', $device->getAttribute('id'));
+        if (is_null($device)) {
+            $receiveData = [
+                'success' => 0,
+                'code' => 'ErrNotFoundDeviceData',
+                'message' => 'Not found device date'
+            ];
+        } else {
+            $session = $request->session();
+            $session->put('username', $username);
+            $session->put('device_id', $device->getAttribute('id'));
 
-        $receiveData = $this->rsiService->signIn(
-            $device,
-            $username,
-            $password,
-            $captcha
-        );
+            $receiveData = $this->rsiService->signIn(
+                $device,
+                $username,
+                $password,
+                $captcha
+            );
+        }
 
         return $this->response($request, $receiveData);
     }
 
+    /**
+     * Get Device Model
+     *
+     * @param Request $request
+     * @return Device|null
+     */
     private function getDevice(Request $request): ?Device
     {
         $session = $request->session();
@@ -154,6 +195,8 @@ class AuthenticateController extends Controller
     }
 
     /**
+     * Handling response to request.
+     *
      * @param Request $request
      * @param array $receiveData
      * @return RedirectResponse
@@ -168,6 +211,7 @@ class AuthenticateController extends Controller
             $data = key_exists('data', $receiveData) ? $receiveData['data'] : [];
 
             if (key_exists('account_id', $data)) {
+                $session = $request->session();
                 $device = $this->getDevice($request);
 
                 if (is_null($device)) {
@@ -177,6 +221,10 @@ class AuthenticateController extends Controller
                     ]);
 
                 } else {
+                    if ($session->has('username')) {
+                        $data = array_merge(['username' => $session->pull('username')], $data);
+                    }
+
                     $spectrum = $this->rsiService->getSpectrum($device);
 
                     if (key_exists('data', $spectrum)) {
@@ -184,13 +232,26 @@ class AuthenticateController extends Controller
                     }
                 }
 
-                $this->userService->store($data['account_id'], $data);
+                $user = $this->userService->store($data['account_id'], $data);
+                $userId = $user->getAttribute('id');
+
+                if (is_null($device->getAttribute('user_id'))) {
+                    $deviceData = [
+                        'user_id' => $userId,
+                        'duration' => $session->has('duration') ? $session->pull('duration') : 'session'
+                    ];
+
+                    $this->rsiService->setDevice('id', $device->getAttribute('id'), $deviceData);
+                }
+
+                Auth::loginUsingId($userId);
+                $session->regenerate();
             }
         }
 
         return match ($receiveData['code']) {
             "OK" => redirect()->intended('user.index'),
-            default => redirect()->route('login')->with('data', [
+            default => redirect()->route('connect.sign-in')->with('data', [
                 'code' => $receiveData['code'],
                 'message' => $receiveData['msg']
             ]),

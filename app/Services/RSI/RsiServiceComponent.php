@@ -5,7 +5,6 @@ namespace App\Services\RSI;
 use App\Models\Device;
 use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
 use App\Services\RSI\Interfaces\RsiServiceComponentInterface;
-use App\Services\RSI\Interfaces\RsiServiceInterface;
 use Illuminate\Support\Facades\Http;
 
 class RsiServiceComponent implements RsiServiceComponentInterface
@@ -111,13 +110,15 @@ class RsiServiceComponent implements RsiServiceComponentInterface
         $device = $this->getDeviceModel($type, $value);
 
         if (is_null($device)) {
-            $device = $this->setDevice($type, $value, $attributes);
+            if ($this->setDevice($type, $value, $attributes)) {
+                $device = $this->getDeviceModel($type, $value);
+            }
         }
 
         return $device;
     }
 
-    private function setDevice(string $type, string $value, array $attributes = []) : bool
+    public function setDevice(string $type, string $value, array $attributes = []) : bool
     {
         $device = $this->getDeviceModel($type, $value);
 
@@ -138,6 +139,8 @@ class RsiServiceComponent implements RsiServiceComponentInterface
                 'year' => now()->addYear(),
                 default => now()->addHour()
             };
+
+            unset($attributes['duration']);
         }
 
         if (is_null($device)) {

@@ -14,7 +14,7 @@
             "alert_check_hostname_title": "Don't forget!",
             "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <b class=\"accent-text\">rsi.im</b>.",
             "form_email_label": "Email",
-            "form_email_placeholder": "someone@example.com",
+            "form_email_placeholder": "someone{'@'}example.com",
             "form_password_label": "Password",
             "form_password_placeholder": "••••••••••••••••",
             "form_captcha_label": "Captcha",

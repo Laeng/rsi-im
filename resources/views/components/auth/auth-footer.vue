@@ -18,7 +18,7 @@
                     <p v-html="$t('auth.text_service_description_5')"></p>
                 </li>
                 <li class="flex">
-                    <Link :href="route('login')" class="underline decoration-dotted hover:text-indigo-500" target="_blank" v-html="$t('auth.link_privacy_policy')"></Link>
+                    <Link :href="route('connect.sign-in')" class="underline decoration-dotted hover:text-indigo-500" target="_blank" v-html="$t('auth.link_privacy_policy')"></Link>
                 </li>
                 <li>
                     <div class="flex justify-center space-x-2 items-end pt-6">

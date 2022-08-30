@@ -21,7 +21,7 @@ class DeviceRepository extends BaseRepository implements DeviceRepositoryInterfa
 
     public function findByHash(string $hash, array $columns = ['*'], array $relations = []): ?Device
     {
-        return $this->model->select($columns)->where('uuid', $hash)->with($relations)->latest()->first();
+        return $this->model->select($columns)->where('hash', $hash)->with($relations)->latest()->first();
     }
 
     public function findByUserId(string $userId, array $columns = ['*'], array $relations = []): ?Device

@@ -44,7 +44,9 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
 
         return $this->postRequest($device, $pathName, [
             'code' => $code,
-            'duration' => $duration
+            'duration' => $duration,
+            'device_type' => 'computer',
+            'device_name' => config('app.name')
         ]);
     }
 

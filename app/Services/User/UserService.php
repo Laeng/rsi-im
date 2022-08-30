@@ -25,7 +25,7 @@ class UserService implements UserServiceInterface
 
         if (is_null($user)) {
             $user = $this->userRepository->create([
-                'id' => $accountId,
+                'account_id' => $accountId,
                 'data' => $data
             ]);
         } else {
