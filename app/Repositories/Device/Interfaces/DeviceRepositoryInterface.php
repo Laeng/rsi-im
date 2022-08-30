@@ -10,5 +10,5 @@ interface DeviceRepositoryInterface extends EloquentRepositoryInterface
 {
     public function findByUserId(string $userId, array $columns = ['*'], array $relations = []): ?Device;
 
-    public function findByUuid(string $uuid, array $columns = ['*'], array $relations = []): ?Device;
+    public function findByHash(string $hash, array $columns = ['*'], array $relations = []): ?Device;
 }

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
-use App\Repositories\User\Interfaces\DeviceRepositoryInterface;
+use App\Repositories\Device\DeviceRepository;
+use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
+use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +17,8 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(DeviceRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(DeviceRepositoryInterface::class, DeviceRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
     /**

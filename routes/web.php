@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require_once __DIR__ . '/web/auth.php';
+require_once __DIR__ . '/web/account.php';
+
+
+
 require_once __DIR__ . '/web/oauth2.php';
 
 Route::middleware(['auth:web'])->get('/hello', [\App\Http\Controllers\Controller::class, 'index'])->name('index');

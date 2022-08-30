@@ -10,11 +10,7 @@ interface UserRepositoryInterface extends EloquentRepositoryInterface
 {
     public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection;
 
-    public function findByAccountId(string $accountId, array $columns = ['*'], array $relations = []): user;
-
-    public function findByAccountIds(array $accountIds, array $columns = ['*'], array $relations = []): Collection;
-
-    public function pagination(int $offset = 0, int $limit = 10, array $columns = ['*'], array $relations = []): ?Collection;
+    public function findByAccountId(string $accountId, array $columns = ['*'], array $relations = []): ?user;
 
     public function new(): User;
 }

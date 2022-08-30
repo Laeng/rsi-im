@@ -30,16 +30,6 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
         return $this->model->select($columns)->where('account_id', '==', $accountId)->with($relations)->latest()->first();
     }
 
-    public function findByAccountIds(array $accountId, array $columns = ['*'], array $relations = []): Collection
-    {
-        return $this->model->select($columns)->whereIn('account_id', $accountId)->with($relations)->latest()->get();
-    }
-
-    public function pagination(int $offset = 0, int $limit = 10, array $columns = ['*'], array $relations = []): ?Collection
-    {
-        return $this->model->select($columns)->with($relations)->offset($offset)->limit($limit)->latest()->get();
-    }
-
     public function new(): User
     {
         return new User();

@@ -2,10 +2,8 @@
 
 namespace App\Services\User;
 
-
-
 use App\Models\User;
-use App\Repositories\User\Interfaces\DeviceRepositoryInterface;
+use App\Repositories\User\Interfaces\UserRepositoryInterface;
 use App\Services\User\Interfaces\UserServiceInterface;
 
 /**
@@ -14,16 +12,16 @@ use App\Services\User\Interfaces\UserServiceInterface;
  */
 class UserService implements UserServiceInterface
 {
-    private DeviceRepositoryInterface $userRepository;
+    private UserRepositoryInterface $userRepository;
 
-    public function __construct(DeviceRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
     public function store(int $accountId, array $data): User
     {
-        $user = $this->userRepository->findById($accountId);
+        $user = $this->userRepository->findByAccountId($accountId);
 
         if (is_null($user)) {
             $user = $this->userRepository->create([

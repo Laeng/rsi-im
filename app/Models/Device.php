@@ -16,8 +16,8 @@ class Device extends Model
      */
     protected $fillable = [
         'id',
-        'uuid',
         'user_id',
+        'hash',
         'data',
         'expired_at'
     ];
