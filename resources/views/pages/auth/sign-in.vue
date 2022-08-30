@@ -11,6 +11,7 @@ import {onMounted, reactive, ref, watch, watchEffect} from "vue";
 import {RefreshIcon} from "@heroicons/vue/solid";
 import InputDescription from "@/views/components/input/input-description.vue";
 
+const defaultCaptchaImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 const props = defineProps({
     code: String,
     message: String,
@@ -23,7 +24,7 @@ const alert = reactive({
 });
 
 const captcha = reactive({
-    src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    src: defaultCaptchaImage,
     show: false,
     reload: false,
     lock: false
@@ -38,11 +39,12 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.post(route('login.submit'), {
+    form.post(route('connect.process'), {
         onFinish: () => {
             form.reset('password');
             form.reset('captcha');
 
+            captcha.src = defaultCaptchaImage;
             captcha.lock = false;
         },
     });
@@ -52,7 +54,7 @@ const submit = () => {
 const refreshCaptcha = () => {
     if (!captcha.reload) {
         captcha.reload = true;
-        axios.post(route('login.captcha'))
+        axios.post(route('connect.captcha'))
             .then((response) => {
                 captcha.src = response.data.data.image;
             })

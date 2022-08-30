@@ -26,7 +26,7 @@ const alert = reactive({
 });
 
 const submit = () => {
-    form.post(route('login.multi-factor'), {
+    form.post(route('connect.multi-factor'), {
         onFinish: () => {
             form.code = '';
             form.duration = 'session';

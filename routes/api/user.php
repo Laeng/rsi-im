@@ -1,9 +1,20 @@
 <?php
 
-use App\Http\Controllers\Account\API\UserController;
+use App\Http\Controllers\User\Api\ApiUserController;
 use Illuminate\Support\Facades\Route;
 
-Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:basic-info'])->group(function () {
-    Route::get('data', [UserController::class, 'data'])->name('data');
+Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:profile'])->group(function () {
+    Route::get('/', [ApiUserController::class, 'index'])->name('index');
 });
 
+Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:joined-organizations'])->group(function () {
+    Route::get('/organizations', [ApiUserController::class, 'organizations'])->name('organizations');
+});
+
+Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:owned-games'])->group(function () {
+    Route::get('/games', [ApiUserController::class, 'games'])->name('games');
+});
+
+Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:launch-game'])->group(function () {
+    Route::get('/launch', [ApiUserController::class, 'launch'])->name('launch');
+});
