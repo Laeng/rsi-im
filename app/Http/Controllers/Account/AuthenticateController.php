@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
 use App\Services\User\Interfaces\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
@@ -51,14 +52,9 @@ class AuthenticateController extends Controller
      */
     public function captcha(Request $request): JsonResponse
     {
-        $session = $request->session();
+        $device = $this->getDevice($request);
 
-        if ($session->has('device_id')) {
-            $deviceId = $session->get('device_id');
-            $device = $this->rsiService->getDevice('id', $deviceId);
-            $captchaData = $this->rsiService->getCaptcha($device);
-
-        } else {
+        if (is_null($device)) {
             $captchaData = [
                 'success' => 0,
                 'code' => 'ErrSessionExpired',
@@ -67,6 +63,9 @@ class AuthenticateController extends Controller
                     'image' => null
                 ]
             ];
+
+        } else {
+            $captchaData = $this->rsiService->getCaptcha($device);
         }
 
         return response()->json($captchaData);
@@ -86,24 +85,22 @@ class AuthenticateController extends Controller
             'duration' => ['required', 'string'],
         ]);
 
-        $session = $request->session();
+        $device = $this->getDevice($request);
 
-        if ($session->has('device_id')) {
-            $deviceId = $session->get('device_id');
-            $device = $this->rsiService->getDevice('id', $deviceId);
-            $receiveData = $this->rsiService->verifyMultiFactor(
-                $device,
-                $request->get('code'),
-                $request->get('duration')
-            );
-
-        } else {
+        if (is_null($device)) {
             $receiveData = [
                 'success' => 0,
                 'code' => 'ErrSessionExpired',
                 'message' => '',
                 'data' => []
             ];
+
+        } else {
+            $receiveData = $this->rsiService->verifyMultiFactor(
+                $device,
+                $request->get('code'),
+                $request->get('duration')
+            );
         }
 
         return $this->response($request, $receiveData);
@@ -143,6 +140,19 @@ class AuthenticateController extends Controller
         return $this->response($request, $receiveData);
     }
 
+    private function getDevice(Request $request): ?Device
+    {
+        $session = $request->session();
+
+        if ($session->has('device_id')) {
+            $deviceId = $session->get('device_id');
+
+            return $this->rsiService->getDevice('id', $deviceId);
+        }
+
+        return null;
+    }
+
     /**
      * @param Request $request
      * @param array $receiveData
@@ -158,6 +168,22 @@ class AuthenticateController extends Controller
             $data = key_exists('data', $receiveData) ? $receiveData['data'] : [];
 
             if (key_exists('account_id', $data)) {
+                $device = $this->getDevice($request);
+
+                if (is_null($device)) {
+                    $data = array_merge($data, [
+                        'avatar' => null,
+                        'organizations' => []
+                    ]);
+
+                } else {
+                    $spectrum = $this->rsiService->getSpectrum($device);
+
+                    if (key_exists('data', $spectrum)) {
+                        $data = array_merge($data, $spectrum['data']);
+                    }
+                }
+
                 $this->userService->store($data['account_id'], $data);
             }
         }
@@ -170,5 +196,4 @@ class AuthenticateController extends Controller
             ]),
         };
     }
-
 }

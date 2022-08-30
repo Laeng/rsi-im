@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Http;
 class RsiServiceComponent implements RsiServiceComponentInterface
 {
     private DeviceRepositoryInterface $deviceRepository;
+    private string $hostName = 'https://robertsspaceindustries.com';
 
     public function __construct(DeviceRepositoryInterface $deviceRepository)
     {
         $this->deviceRepository = $deviceRepository;
     }
 
-    private function postRequest(Device $device, string $pathName, array $jsonBody): array
+    public function postRequest(Device $device, string $pathName, array $jsonBody = []): array
     {
         if (!preg_match('/^\//', $pathName)) {
             return [
@@ -28,11 +29,10 @@ class RsiServiceComponent implements RsiServiceComponentInterface
         }
 
         $header = $device->getAttribute('data');
-        $host = 'https://robertsspaceindustries.com';
         $response = Http::acceptJson()
-            ->withHeaders($device->getAttribute('data'))
+            ->withHeaders($header)
             ->timeout(5)
-            ->post($host . $pathName, $jsonBody);
+            ->post($this->hostName . $pathName, $jsonBody);
 
         if (!empty($response->body())) {
             $data = json_decode($response->body(), true) ?? [];
@@ -60,8 +60,47 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             return [
                 'success' => 0,
                 'code' => $code,
+                'message' => ''
+            ];
+        }
+    }
+
+    public function postRequestImage(Device $device, string $pathName, array $jsonBody = [], string $type = 'png'): array
+    {
+        if (!preg_match('/^\//', $pathName)) {
+            return [
+                'success' => 0,
+                'code' => 'ErrNotCorrectPathName',
+                'message' => ''
+            ];
+        }
+
+        $header = $device->getAttribute('data');
+        $response = Http::accept("image/{$type}")
+            ->withHeaders($header)
+            ->timeout(5)
+            ->post($this->hostName . $pathName, $jsonBody);
+
+        if (!empty($response->body())) {
+            return [
+                'success' => 1,
+                'code' => 'OK',
                 'data' => [
-                    'image' => 'data:image/png;base64,'
+                    'image' => "data:image/{$type};base64,".base64_encode($response)
+                ]
+            ];
+        } else {
+            $code = 'ErrUnknown';
+
+            if ($response->serverError()) $code = 'ErrServer';
+            if ($response->clientError()) $code = 'ErrClient';
+
+            return [
+                'success' => 0,
+                'code' => $code,
+                'message' => '',
+                'data' => [
+                    'image' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
                 ]
             ];
         }

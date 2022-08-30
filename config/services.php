@@ -54,13 +54,13 @@ return [
         ],
         'main' => [
             'status' => env('RSI_MAIN_STATUS', ''),
-            'login' => env('RSI_MAIN_LOGIN', ''),
+            'sign-in' => env('RSI_MAIN_SIGN_IN', ''),
             'captcha' => env('RSI_MAIN_CAPTCHA', ''),
             'multi-factor'=>env('RSI_MAIN_FACTOR', ''),
             'games' => env('RSI_MAIN_GAMES', ''),
             'library' => env('RSI_MAIN_LIBRARY', ''),
             'release' => env('RSI_MAIN_RELEASE', ''),
-            'logout' => env('RSI_MAIN_LOGOUT', '')
+            'sign-out' => env('RSI_MAIN_SIGN_OUT', '')
         ],
         'spectrum' => [
             'auth' => env('RSI_SPECTRUM_AUTH', '')

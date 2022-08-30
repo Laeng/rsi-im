@@ -2,246 +2,147 @@
 
 namespace App\Services\RSI;
 
+use App\Models\Device;
+use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
-use Illuminate\Contracts\Session\Session;
-use Illuminate\Http\Client\Response as ClientResponse;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
-class RsiService implements RsiServiceInterface
+class RsiService extends RsiServiceComponent implements RsiServiceInterface
 {
-    /*
-     * I have hidden the detailed paths to protect the CIG's endpoint.
-     * And I hope your understanding as this is a decision for your account and their security.
-     * Thank you.
-     *
-     * by laeng
-     */
-
-
-    /**
-     * It's the same as the website URL of RSI.
-     * All APIs implemented here are based on this address.
-     *
-     * @var string Base Endpoint
-     */
-    private string $base = 'https://robertsspaceindustries.com';
-    private string $sessionName = 'RSI_SESSION';
+    public function __construct(DeviceRepositoryInterface $deviceRepository)
+    {
+        parent::__construct($deviceRepository);
+    }
 
     public function status(): array
     {
-        $url = $this->base . config('services.rsi.main.status');
-        $response = Http::post($url, []);
-
+        // TODO: Implement status() method.
         return [];
     }
 
-    public function login(string $username, string $password, string $captcha = ''): array
+    public function signIn(Device $device, string $username, string $password, string $captcha): array
     {
-        $url = $this->base . config('services.rsi.main.login');
-        $session = request()->session();
-        $header = $this->getHeaders($session);
+        $pathName = config('services.rsi.main.sign-in');
 
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($header)
-            ->post($url, [
-                'username' => $username,
-                'password' => $password,
-                'captcha' => $captcha
-            ]);
-
-        $this->setUsername($session, $username);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function captcha(): array
-    {
-        $url = $this->base . config('services.rsi.main.captcha');
-        $session = request()->session();
-
-        $response = Http::accept('image/png')
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, []);
-
-        if (!empty($response->body())) {
-            return [
-                'success' => 1,
-                'code' => 'OK',
-                'data' => [
-                    'image' => 'data:image/png;base64,'.base64_encode($response)
-                ]
-            ];
-        } else {
-            $code = 'ErrUnknown';
-
-            if ($response->serverError()) $code = 'ErrServer';
-            if ($response->clientError()) $code = 'ErrClient';
-
-            return [
-                'success' => 0,
-                'code' => $code,
-                'data' => [
-                    'image' => 'data:image/png;base64,'
-                ]
-            ];
-        }
-    }
-
-    public function multiFactor(string $code, string $duration): array
-    {
-        $url = $this->base . config('services.rsi.main.multi-factor');
-        $session = request()->session();
-        $header = $this->getHeaders($session);
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($header)
-            ->post($url, [
-                'code' => $code,
-                'device_name' => config('app.name'),
-                'device_type' => 'computer',
-                'duration' => $duration
-            ]);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function games(): array
-    {
-        $url = $this->base . config('services.rsi.main.games');
-        $session = request()->session();
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, []);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function library(string $claims): array
-    {
-        $url = $this->base . config('services.rsi.main.library');
-        $session = request()->session();
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, [
-                'claims' => $claims
-            ]);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function release(string $claims, string $channel, string $game): array
-    {
-        $url = $this->base . config('services.rsi.main.release');
-        $session = request()->session();
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, [
-                'claims' => $claims,
-                'channelId' => $channel,
-                'gameId' => $game
-            ]);
-
-        return $this->getResult($session, $response);
-    }
-
-
-    public function spectrum(): array
-    {
-        $url = $this->base . config('services.rsi.spectrum.auth');
-        $session = request()->session();
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, []);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function logout(): array
-    {
-        $url = $this->base . config('services.rsi.main.logout');
-        $session = request()->session();
-
-        $response = Http::acceptJson()
-            ->timeout(5)
-            ->withHeaders($this->getHeaders($session))
-            ->post($url, []);
-
-        return $this->getResult($session, $response);
-    }
-
-    public function getHeaders(Session $session): array
-    {
-        $header = $session->get($this->sessionName);
-
-        if (is_null($header) || !array_key_exists(config('services.rsi.header.one.key'), $header)) {
-            $one = Str::lower(Str::random(config('services.rsi.header.one.length')));
-            $this->setHeaders($session, $one, '');
-
-            $header = $this->getHeaders($session);
-        }
-
-        return $header;
-    }
-
-    private function setHeaders(Session $session, $one, $two): void
-    {
-        $session->put($this->sessionName, [
-            config('services.rsi.header.one.key') => $one,
-            config('services.rsi.header.two.key') => $two
+        return $this->postRequest($device, $pathName, [
+            'username' => $username,
+            'password' => $password,
+            'captcha' => $captcha
         ]);
     }
 
-    public function setUsername(Session $session, string $username): void
+    public function signOut(Device $device): array
     {
-        $session->put('RSI_USERNAME', Crypt::encryptString($username));
+        $pathName = config('services.rsi.main.sign-out');
+
+        return $this->postRequest($device, $pathName);
     }
 
-    public function getUsername(Session $session): string
+    public function verifyMultiFactor(Device $device, string $code, string $duration): array
     {
-        return $session->has('RSI_USERNAME') ? Crypt::decryptString($session->get('RSI_USERNAME')) : '';
+        $pathName = config('services.rsi.main.multi-factor');
+
+        return $this->postRequest($device, $pathName, [
+            'code' => $code,
+            'duration' => $duration
+        ]);
     }
 
-    private function getResult(Session $session, ClientResponse $response): array
+    public function getCaptcha(Device $device): array
     {
-        if (!empty($response->body())) {
-            $header = $this->getHeaders($session);
-            $data = json_decode($response->body(), true) ?? [];
+        $pathName = config('services.rsi.main.captcha');
 
-            if (isset($data['data']['session_id'])) {
-                $this->setHeaders(
-                    $session,
-                    $header[config('services.rsi.header.one.key')],
-                    $data['data']['session_id']
-                );
+        return $this->postRequestImage($device, $pathName);
+    }
+
+    public function getGames(Device $device): array
+    {
+        $pathName = config('services.rsi.main.games');
+
+        return $this->postRequest($device, $pathName);
+    }
+
+    public function getLibrary(Device $device, string $claims): array
+    {
+        $pathName = config('services.rsi.main.library');
+        $response = $this->postRequest($device, $pathName, [
+            'claims' => $claims
+        ]);
+
+        $games = [];
+        $data = $response['data'];
+
+        if (key_exists('games', $data)) {
+            foreach ($data['games'] as $game) {
+                $channels = [];
+
+                if (key_exists('channels', $game)) {
+                    foreach ($game['channels'] as $channel) {
+                        $channels[] = [
+                            'id' => key_exists('id', $channels) ? $channel['id']: null,
+                            'name' => key_exists('name', $channels) ? $channels['name'] : null,
+                            'nid' => key_exists('nid', $channels) ? $channels['nid'] : null
+                        ];
+                    }
+                }
+
+                $games[] = [
+                    'id' => key_exists('id', $game) ? $game['id'] : null,
+                    'name' => key_exists('id', $game) ? $game['name'] : null,
+                    'channels' => $channels,
+                ];
             }
 
-            return $data;
-        } else {
-            $code = 'ErrUnknown';
-
-            if ($response->serverError()) $code = 'ErrServer';
-            if ($response->clientError()) $code = 'ErrClient';
-
-            return [
-                'success' => 0,
-                'code' => $code,
-                'data' => [
-                    'image' => 'data:image/png;base64,'
-                ]
-            ];
+            $data['games'] = $games;
+            $response['data'] = $data;
         }
+
+        return $response;
+    }
+
+    public function getRelease(Device $device, string $claims, string $channel, string $game): array
+    {
+        $pathName = config('services.rsi.main.library');
+
+        return $this->postRequest($device, $pathName, [
+            'claims' => $claims,
+            'channelId' => $channel,
+            'gameId' => $game
+        ]);
+    }
+
+    public function getSpectrum(Device $device): array
+    {
+        $pathName = config('services.rsi.spectrum.auth');
+        $response = $this->postRequest($device, $pathName);
+        $data = $response['data'];
+
+        if (key_exists('member', $data)) {
+            $member = $data['member'];
+            $extraData = [
+                'avatar' => key_exists('avatar', $member)
+            ];
+
+            $data = array_merge($data, $extraData);
+        }
+
+        if (key_exists('communities', $data) && count($data['communities']) > 1) {
+            $organizations = [];
+
+            foreach ($data['communities'] as $community) {
+                if ($community['id'] == 1) continue;
+
+                $organizations[] = [
+                    'id' => key_exists('id', $community) ? $community['id'] : null,
+                    'name' => key_exists('name', $community) ? $community['name'] : null,
+                    'avatar' => key_exists('avatar', $community) ? $community['avatar'] : null,
+                    'banner' => key_exists('banner', $community) ? $community['banner'] : null
+                ];
+            }
+
+            $data = array_merge($data, $organizations);
+        }
+
+        return $data;
     }
 }

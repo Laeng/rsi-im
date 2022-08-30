@@ -2,86 +2,87 @@
 
 namespace App\Services\RSI\Interfaces;
 
-use Illuminate\Contracts\Session\Session;
+use App\Models\Device;
 
-interface RsiServiceInterface
+interface RsiServiceInterface extends RsiServiceComponentInterface
 {
     /**
-     * @return array
+     * Get the status of RSI.
      *
-     * @TODO Get the status of RSI.
+     * @return array
      */
     public function status(): array;
 
     /**
-     * Get login results.
+     * Get sign in results.
      *
+     * @param Device $device
      * @param string $username RSI Account username (It should receive plain text as well as email.)
      * @param string $password RSI Account password
-     * @param string $captcha  CAPTCHA (it must enter the characters contained in the image generated via captcha method.)
+     * @param string $captcha CAPTCHA (it must enter the characters contained in the image generated via captcha method.)
      * @return array
      */
-    public function login(string $username, string $password, string $captcha = ''): array;
+    public function signIn(Device $device, string $username, string $password, string $captcha): array;
 
     /**
-     * Get the captcha image.
+     * Close the session for the safety of user's account.
      *
+     * @param Device $device
      * @return array
-     *
      */
-    public function captcha(): array;
+    public function signOut(Device $device): array;
 
     /**
      * Send the verification code entered by the user and receive the result.
      *
+     * @param Device $device
      * @param string $code
      * @param string $duration
      * @return array
-     *
      */
-    public function multiFactor(string $code, string $duration): array;
+    public function verifyMultiFactor(Device $device, string $code, string $duration): array;
+
+    /**
+     * Get the captcha image.
+     *
+     * @param Device $device
+     * @return array
+     */
+    public function getCaptcha(Device $device): array;
 
     /**
      * Get permission to access user owned games information
      *
+     * @param Device $device
      * @return array
      */
-    public function games(): array;
+    public function getGames(Device $device): array;
 
     /**
      * Get user owned games
      *
+     * @param Device $device
      * @param string $claims
      * @return array
      */
-    public function library(string $claims): array;
+    public function getLibrary(Device $device, string $claims): array;
 
     /**
      * Get game version
      *
+     * @param Device $device
      * @param string $claims
      * @param string $channel
      * @param string $game
      * @return array
      */
-    public function release(string $claims, string $channel, string $game): array;
+    public function getRelease(Device $device, string $claims, string $channel, string $game): array;
 
     /**
-     * Get Organizational Information
+     * Get the spectrum data. Among them, only collect organization information.
      *
-     * @return array
-     *
-     */
-    public function spectrum(): array;
-
-    /**
-     * Close the session for the safety of your account.
-     *
+     * @param Device $device
      * @return array
      */
-    public function logout(): array;
-
-    public function getHeaders(Session $session): array;
-
-    public function getUsername(Session $session): string;
+    public function getSpectrum(Device $device): array;
 }
