@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->nullable()->index();
             $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->string('hash', 64)->nullable()->index();
             $table->longText('data')->nullable();
             $table->timestamp('expired_at');
             $table->timestamps();
