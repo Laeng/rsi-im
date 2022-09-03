@@ -85,4 +85,13 @@ interface RsiServiceInterface extends RsiServiceComponentInterface
      * @return array
      */
     public function getSpectrum(Device $device): array;
+
+
+    /**
+     * Check session exists
+     *
+     * @param Device $device
+     * @return array
+     */
+    public function check(Device $device): array;
 }

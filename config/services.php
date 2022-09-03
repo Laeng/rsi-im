@@ -60,7 +60,8 @@ return [
             'games' => env('RSI_MAIN_GAMES', ''),
             'library' => env('RSI_MAIN_LIBRARY', ''),
             'release' => env('RSI_MAIN_RELEASE', ''),
-            'sign-out' => env('RSI_MAIN_SIGN_OUT', '')
+            'sign-out' => env('RSI_MAIN_SIGN_OUT', ''),
+            'check' => env('RSI_MAIN_SIGN_CHECK', '')
         ],
         'spectrum' => [
             'auth' => env('RSI_SPECTRUM_AUTH', '')

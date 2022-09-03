@@ -82,9 +82,9 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
                 if (key_exists('channels', $game)) {
                     foreach ($game['channels'] as $channel) {
                         $channels[] = [
-                            'id' => key_exists('id', $channels) ? $channel['id']: null,
-                            'name' => key_exists('name', $channels) ? $channels['name'] : null,
-                            'nid' => key_exists('nid', $channels) ? $channels['nid'] : null
+                            'id' => key_exists('id', $channel) ? $channel['id']: null,
+                            'name' => key_exists('name', $channel) ? $channel['name'] : null,
+                            'nid' => key_exists('nid', $channel) ? $channel['nid'] : null
                         ];
                     }
                 }
@@ -189,5 +189,12 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
         $data['data'] = $newData;
 
         return $data;
+    }
+
+    public function check(Device $device): array
+    {
+        $pathName = config('services.rsi.main.check');
+
+        return $this->postRequest($device, $pathName);
     }
 }

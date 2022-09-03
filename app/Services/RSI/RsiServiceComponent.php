@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
 use App\Services\RSI\Interfaces\RsiServiceComponentInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class RsiServiceComponent implements RsiServiceComponentInterface
 {
@@ -23,18 +24,28 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             return [
                 'success' => 0,
                 'code' => 'ErrNotCorrectPathName',
-                'message' => ''
+                'msg' => ''
             ];
         }
 
         $header = $device->getAttribute('data');
         $response = Http::acceptJson()
             ->withHeaders($header)
-            ->timeout(5)
+            ->timeout(30)
             ->post($this->hostName . $pathName, $jsonBody);
 
-        if (!empty($response->body())) {
+        $body = $response->body();
+
+        if (!empty($body)) {
             $data = json_decode($response->body(), true) ?? [];
+
+            if (count($data) === 0) {
+                return [
+                    'success' => 0,
+                    'code' => 'ErrNotJsonResponse',
+                    'msg' => 'Can not parse response'
+                ];
+            }
 
             if (isset($data['data']['device_id'])) {
                 $header[config('services.rsi.header.one.key')] = $data['data']['device_id'];
@@ -48,6 +59,9 @@ class RsiServiceComponent implements RsiServiceComponentInterface
                 $this->setDevice('id', $device->getAttribute('id'), ['data' => $header]);
             }
 
+            $data = $this->set($data, 'code');
+            $data = $this->set($data, 'msg');
+
             return $data;
 
         } else {
@@ -59,7 +73,7 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             return [
                 'success' => 0,
                 'code' => $code,
-                'message' => ''
+                'msg' => ''
             ];
         }
     }
@@ -70,14 +84,14 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             return [
                 'success' => 0,
                 'code' => 'ErrNotCorrectPathName',
-                'message' => ''
+                'msg' => ''
             ];
         }
 
         $header = $device->getAttribute('data');
         $response = Http::accept("image/{$type}")
             ->withHeaders($header)
-            ->timeout(5)
+            ->timeout(30)
             ->post($this->hostName . $pathName, $jsonBody);
 
         if (!empty($response->body())) {
@@ -97,7 +111,7 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             return [
                 'success' => 0,
                 'code' => $code,
-                'message' => '',
+                'msg' => '',
                 'data' => [
                     'image' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
                 ]
@@ -172,5 +186,14 @@ class RsiServiceComponent implements RsiServiceComponentInterface
     {
         $salt = config('app.key');
         return hash("sha256", "{$ip}/{$username}/{$salt}");
+    }
+
+    private function set(array $array, string $key, string $value = ''): array
+    {
+        if (!key_exists($key, $array)) {
+            $array[$key] = $value;
+        }
+
+        return $array;
     }
 }

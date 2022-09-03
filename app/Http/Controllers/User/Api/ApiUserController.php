@@ -8,6 +8,7 @@ use App\Services\RSI\Interfaces\RsiServiceInterface;
 use App\Services\User\Interfaces\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApiUserController
 {
@@ -90,13 +91,13 @@ class ApiUserController
         $games = $this->rsiService->getGames($device);
 
         if (!key_exists('data', $games)) {
-            return $this->response(false, $games['code'], $games['message']);
+            return $this->response(false, $games['code'], $games['msg']);
         }
 
         $library = $this->rsiService->getLibrary($device, $games['data']);
 
-        if (!key_exists('data', $library)) {
-            return $this->response(false, $library['code'], $library['message']);
+        if (!key_exists('data', $library) || count($library['data']) == 0) {
+            return $this->response(false, $library['code'], $library['msg']);
         }
 
         return $this->response(true, 'OK', 'Success', $library['data']);
@@ -119,14 +120,14 @@ class ApiUserController
 
         $device = $this->rsiService->getDevice('user_id', $user->getAttribute('id'));
 
-        if (!$request->has('game_id') || !$request->has('channel_id')) {
+        if (!$request->has('game_id')) {
             return $this->response(false, 'ErrValidationFail', 'check body');
         }
 
         $games = $this->rsiService->getGames($device);
 
-        if (!key_exists('data', $games)) {
-            return $this->response(false, $games['code'], $games['message']);
+        if (!key_exists('data', $games) || count($games['data']) == 0) {
+            return $this->response(false, $games['code'], $games['msg']);
         }
 
         $release = $this->rsiService->getRelease(
@@ -137,10 +138,24 @@ class ApiUserController
         );
 
         if (!key_exists('data', $release)) {
-            return $this->response(false, $release['code'], $release['message']);
+            return $this->response(false, $release['code'], $release['msg']);
         }
 
         return $this->response(true, 'OK', 'Success', $release['data']);
+    }
+
+    public function check(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (is_null($user)) {
+            return $this->response(false, 'ErrNotFoundUser', 'Can not found user');
+        }
+
+        $device = $this->rsiService->getDevice('user_id', $user->getAttribute('id'));
+        $response = $this->rsiService->check($device);
+
+        return $this->response(true, 'OK', 'Success', $response['data']);
     }
 
     private function response(bool $success, string $code, string $message, array $data = []): JsonResponse

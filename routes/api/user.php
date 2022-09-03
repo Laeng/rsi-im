@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:profile'])->group(function () {
     Route::get('/', [ApiUserController::class, 'profile'])->name('profile');
+    Route::get('/check', [ApiUserController::class, 'check'])->name('check');
 });
 
 Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:joined-organizations'])->group(function () {
