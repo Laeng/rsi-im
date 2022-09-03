@@ -121,12 +121,16 @@ class ApiUserController
         $device = $this->rsiService->getDevice('user_id', $user->getAttribute('id'));
 
         if (!$request->has('game_id')) {
-            return $this->response(false, 'ErrValidationFail', 'check body');
+            return $this->response(false, 'ErrValidationFail', 'check game id');
+        }
+
+        if (!$request->has('channel_id')) {
+            return $this->response(false, 'ErrValidationFail', 'check channel id');
         }
 
         $games = $this->rsiService->getGames($device);
 
-        if (!key_exists('data', $games) || count($games['data']) == 0) {
+        if (!key_exists('data', $games)) {
             return $this->response(false, $games['code'], $games['msg']);
         }
 
@@ -144,6 +148,12 @@ class ApiUserController
         return $this->response(true, 'OK', 'Success', $release['data']);
     }
 
+    /**
+     * [GET] authentication status.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function check(Request $request): JsonResponse
     {
         $user = $request->user();
