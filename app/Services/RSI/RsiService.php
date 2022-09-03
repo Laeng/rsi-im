@@ -103,9 +103,9 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
         return $response;
     }
 
-    public function getRelease(Device $device, string $claims, string $channel, string $game): array
+    public function getRelease(Device $device, string $claims, string $game, string $channel): array
     {
-        $pathName = config('services.rsi.main.library');
+        $pathName = config('services.rsi.main.release');
 
         return $this->postRequest($device, $pathName, [
             'claims' => $claims,

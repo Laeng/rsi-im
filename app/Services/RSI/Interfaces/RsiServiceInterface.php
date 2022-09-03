@@ -76,7 +76,7 @@ interface RsiServiceInterface extends RsiServiceComponentInterface
      * @param string $game
      * @return array
      */
-    public function getRelease(Device $device, string $claims, string $channel, string $game): array;
+    public function getRelease(Device $device, string $claims, string $game, string $channel): array;
 
     /**
      * Get the spectrum data. Among them, only collect organization information.
