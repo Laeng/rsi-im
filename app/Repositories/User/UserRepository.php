@@ -25,7 +25,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function findByAccountId(string $accountId, array $columns = ['*'], array $relations = []): ?User
     {
-        return $this->model->select($columns)->where('account_id', '==', $accountId)->with($relations)->latest()->first();
+        return $this->model->select($columns)->where('account_id', $accountId)->with($relations)->latest()->first();
     }
 
     public function new(): User

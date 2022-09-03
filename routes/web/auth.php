@@ -11,4 +11,8 @@ Route::prefix('connect')->middleware(['web'])->name('connect.')->group(function 
     Route::post('/process', [AuthenticateController::class, 'process'])->name('process');
 });
 
+Route::prefix('disconnect')->middleware(['web'])->name('disconnect.')->group(function () {
+    Route::get('/', [AuthenticateController::class, 'signOut'])->name('sign-out');
+});
+
 

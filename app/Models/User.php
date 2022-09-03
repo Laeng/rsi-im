@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Token;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -40,4 +41,8 @@ class User extends Authenticatable
         'account_id' => 'integer',
         'data' => 'encrypted:array'
     ];
+
+    public function token() {
+        return $this->hasMany(Token::class);
+    }
 }

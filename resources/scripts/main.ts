@@ -1,5 +1,4 @@
 import InertiaProgress from "@/scripts/progress";
-import VueCookies from 'vue-cookies'
 
 import {createApp, h, watch} from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -26,12 +25,15 @@ createInertiaApp({
             locale: props.initialPage.props.locale as string,
             fallbackLocale: 'en',
         })
-        vue.use(plugin).use(i18n).use(VueCookies).mixin({methods: {route: window.route}}).mount(el);
+        vue.use(plugin);
+        vue.use(i18n);
+        vue.mixin({methods: {route: window.route}});
+        vue.mount(el);
 
 
         loadLocaleMessages(i18n, props.initialPage.props.locale as string).then();
 
-
+        //TODO - custom language
     },
 }).then();
 

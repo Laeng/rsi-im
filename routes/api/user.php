@@ -4,7 +4,7 @@ use App\Http\Controllers\User\Api\ApiUserController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:profile'])->group(function () {
-    Route::get('/', [ApiUserController::class, 'index'])->name('index');
+    Route::get('/', [ApiUserController::class, 'profile'])->name('profile');
 });
 
 Route::name('api.user.')->prefix('v1/user')->middleware(['auth:api', 'scope:joined-organizations'])->group(function () {

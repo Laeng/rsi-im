@@ -64,6 +64,21 @@ return [
         ],
         'spectrum' => [
             'auth' => env('RSI_SPECTRUM_AUTH', '')
+        ],
+        'attribute-redacted' => [
+            '00' => env('RSI_ATTRIBUTE_REDACTED_00', ''),
+            '01' => env('RSI_ATTRIBUTE_REDACTED_01', ''),
+            '02' => env('RSI_ATTRIBUTE_REDACTED_02', ''),
+            '03' => env('RSI_ATTRIBUTE_REDACTED_03', ''),
+            '04' => env('RSI_ATTRIBUTE_REDACTED_04', ''),
+            '05' => env('RSI_ATTRIBUTE_REDACTED_05', ''),
+            '06' => env('RSI_ATTRIBUTE_REDACTED_06', ''),
+            '07' => env('RSI_ATTRIBUTE_REDACTED_07', ''),
+            '08' => env('RSI_ATTRIBUTE_REDACTED_08', ''),
+            '09' => env('RSI_ATTRIBUTE_REDACTED_09', ''),
+            '10' => env('RSI_ATTRIBUTE_REDACTED_10', ''),
+            '11' => env('RSI_ATTRIBUTE_REDACTED_11', ''),
+
         ]
     ]
 

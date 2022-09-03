@@ -6,6 +6,7 @@ use App\Models\Device;
 use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class RsiService extends RsiServiceComponent implements RsiServiceInterface
 {
@@ -119,13 +120,15 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
         $response = $this->postRequest($device, $pathName);
         $data = $response['data'];
 
+        $newData = [
+            'avatar' => null,
+            'organizations' => [],
+            'roles' => []
+        ];
+
         if (key_exists('member', $data)) {
             $member = $data['member'];
-            $extraData = [
-                'avatar' => key_exists('avatar', $member)
-            ];
-
-            $data = array_merge($data, $extraData);
+            $newData['avatar'] = key_exists('avatar', $member) ? $member['avatar'] : null;
         }
 
         if (key_exists('communities', $data) && count($data['communities']) > 1) {
@@ -142,8 +145,48 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
                 ];
             }
 
-            $data = array_merge($data, $organizations);
+            $newData['organizations'] = $organizations;
         }
+
+        $roles = [];
+
+        if (key_exists('roles', $data)) {
+            foreach ($data['roles'] as $key => $role) {
+                if ($key === 1) {
+                    foreach ($role as $item) {
+                        switch ($item) {
+                            case "1":
+                            case "2":
+                                if (!in_array('staff', $roles)) $roles[] = 'staff';
+                                break;
+                            case "3":
+                                if (!in_array('backer', $roles)) $roles[] = 'backer';
+                                break;
+                            case "5":
+                            case "9":
+                                if (!in_array('subscriber', $roles)) $roles[] = 'subscriber';
+                                break;
+                            case "6":
+                            case "10":
+                                if (!in_array('concierge', $roles)) $roles[] = 'concierge';
+                                break;
+                            case "7":
+                                if (!in_array('evocati', $roles)) $roles[] = 'evocati';
+                                break;
+                            case "137732":
+                                if (!in_array('mmhc', $roles)) $roles[] = 'mmhc';
+                                break;
+                        }
+
+                    }
+                    break;
+                }
+            }
+
+            $newData['roles'] = $roles;
+        }
+
+        $data['data'] = $newData;
 
         return $data;
     }

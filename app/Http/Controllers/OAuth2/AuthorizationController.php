@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Laravel\Passport\Bridge\User as PassportUser;
 use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Exceptions\OAuthServerException;
 use Laravel\Passport\Http\Controllers\HandlesOAuthErrors;
 use Laravel\Passport\Passport;
 use Laravel\Passport\TokenRepository;
@@ -54,7 +55,7 @@ class AuthorizationController extends  \Laravel\Passport\Http\Controllers\Author
     /**
      * Authorize a client to access the user's account.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface  $psrRequest
+     * @param ServerRequestInterface $psrRequest
      * @param Request $request
      * @param ClientRepository $clients
      * @param TokenRepository $tokens
