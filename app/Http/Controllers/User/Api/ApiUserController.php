@@ -38,11 +38,11 @@ class ApiUserController
 
         $data = $user->getAttribute('data');
 
-        $data = $this->unset($data, config('services.rsi.attribute-redacted.00'));
-        $data = $this->unset($data, config('services.rsi.attribute-redacted.01'));
-        $data = $this->unset($data, config('services.rsi.attribute-redacted.02'));
-        $data = $this->unset($data, config('services.rsi.attribute-redacted.03'));
-        $data = $this->unset($data, config('services.rsi.attribute-redacted.04'));
+        $data = $this->unset($data, config('services.rsi.attribute.00'));
+        $data = $this->unset($data, config('services.rsi.attribute.01'));
+        $data = $this->unset($data, config('services.rsi.attribute.02'));
+        $data = $this->unset($data, config('services.rsi.attribute.03'));
+        $data = $this->unset($data, config('services.rsi.attribute.04'));
 
         return $this->response(true, 'OK', 'Success', $data);
     }

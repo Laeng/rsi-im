@@ -78,7 +78,6 @@ return [
             '08' => env('RSI_ATTRIBUTE_REDACTED_08', ''),
             '09' => env('RSI_ATTRIBUTE_REDACTED_09', ''),
             '10' => env('RSI_ATTRIBUTE_REDACTED_10', ''),
-            '11' => env('RSI_ATTRIBUTE_REDACTED_11', ''),
 
         ]
     ]

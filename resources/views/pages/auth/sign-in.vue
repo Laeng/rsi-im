@@ -8,7 +8,7 @@ import PrimaryButton from "@/views/components/button/primary-button.vue";
 import InfoAlert from "@/views/components/alert/info-alert.vue";
 import ErrorAlert from "@/views/components/alert/error-alert.vue";
 import {onMounted, reactive, ref, watch, watchEffect} from "vue";
-import {RefreshIcon} from "@heroicons/vue/solid";
+import {RefreshIcon, LockClosedIcon} from "@heroicons/vue/solid";
 import InputDescription from "@/views/components/input/input-description.vue";
 
 const defaultCaptchaImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -30,6 +30,10 @@ const captcha = reactive({
     lock: false
 });
 
+const loading = reactive({
+   visible: false,
+});
+
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 const form = useForm({
@@ -39,13 +43,20 @@ const form = useForm({
 });
 
 const submit = () => {
+    if (loading.visible) return;
+
     form.post(route('connect.process'), {
+        onStart: () => {
+            loading.visible = true;
+        },
         onFinish: () => {
             form.reset('password');
             form.reset('captcha');
 
             captcha.src = defaultCaptchaImage;
             captcha.lock = false;
+
+            loading.visible = false;
         },
     });
 };
@@ -148,7 +159,11 @@ watchEffect(() => {
                 </div>
             </div>
             <div>
-                <primary-button>
+                <primary-button :disabled="loading.visible">
+                    <span class="mr-1">
+                        <RefreshIcon class="h-4 w-4 icon-spin" v-show="loading.visible"/>
+                        <LockClosedIcon class="h-4 w-4" v-show="!loading.visible"/>
+                    </span>
                     {{ $t('auth.sign_in.form_sign_in_button') }}
                 </primary-button>
             </div>

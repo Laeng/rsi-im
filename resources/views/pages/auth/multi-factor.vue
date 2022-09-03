@@ -8,11 +8,16 @@ import NativeSelect from "@/views/components/select/native-select.vue";
 import {reactive, watchEffect} from "vue";
 import ErrorAlert from "@/views/components/alert/error-alert.vue";
 import InputDescription from "@/views/components/input/input-description.vue";
+import {RefreshIcon, LockClosedIcon} from "@heroicons/vue/solid";
 
 const props = defineProps({
     code: String,
     message: String,
     errors: Object,
+});
+
+const loading = reactive({
+    visible: false,
 });
 
 const form = useForm({
@@ -26,10 +31,17 @@ const alert = reactive({
 });
 
 const submit = () => {
+    if (loading.visible) return;
+
     form.post(route('connect.multi-factor'), {
+        onStart: () => {
+          loading.visible = true;
+        },
         onFinish: () => {
             form.code = '';
             form.duration = 'session';
+
+            loading.visible = false;
         },
     });
 };
@@ -72,7 +84,11 @@ watchEffect(() => {
                 <input-description class="mt-1" :is-error="props.errors?.duration !== undefined" :message="props.errors?.duration"/>
             </div>
             <div>
-                <primary-button>
+                <primary-button :disabled="loading.visible">
+                    <span class="mr-1">
+                        <RefreshIcon class="h-4 w-4 icon-spin" v-show="loading.visible"/>
+                        <LockClosedIcon class="h-4 w-4" v-show="!loading.visible"/>
+                    </span>
                     {{ $t('auth.multi_factor.form_authenticate_button') }}
                 </primary-button>
             </div>
@@ -81,5 +97,17 @@ watchEffect(() => {
 </template>
 
 <style scoped>
+.icon-spin {
+    animation: icon-spin 1s linear infinite;
+    animation-direction: reverse;
+}
 
+@keyframes icon-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 </style>

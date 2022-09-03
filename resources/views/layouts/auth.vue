@@ -4,7 +4,6 @@ import AuthFooter from "@/views/components/auth/auth-footer.vue";
 import BasicLayout from "@/views/layouts/basic.vue";
 import LocaleSelect from "@/views/components/select/locale-select.vue";
 
-
 </script>
 
 <template>
