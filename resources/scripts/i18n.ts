@@ -1,7 +1,6 @@
 import { nextTick } from 'vue'
 import {createI18n, I18n, I18nOptions} from 'vue-i18n'
 
-
 export function setupI18n(options:I18nOptions = { locale: 'en' }) {
     const i18n = createI18n(options)
     setI18nLanguage(i18n, options.locale as string)
@@ -9,11 +8,13 @@ export function setupI18n(options:I18nOptions = { locale: 'en' }) {
 }
 
 export function setI18nLanguage(i18n: I18n, locale: string) {
-    if (i18n.mode === 'legacy') {
+    if (i18n.global.locale instanceof String) {
         i18n.global.locale = locale
     } else {
-        //i18n.global.locale.value = locale
+        // @ts-ignore
+        i18n.global.locale.value = locale
     }
+
     /**
      * NOTE:
      * If you need to specify the language setting for headers, such as the `fetch` API, set it here.

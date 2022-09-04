@@ -3,7 +3,7 @@ import InertiaProgress from "@/scripts/progress";
 import {createApp, h, watch} from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { resolvePageComponent } from 'vite-plugin-laravel/inertia';
-import {loadLocaleMessages, setI18nLanguage, setupI18n} from "@/scripts/i18n";
+import {loadLocaleMessages, setupI18n} from "@/scripts/i18n";
 
 declare global {
     interface Window {
@@ -19,9 +19,10 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(name, import.meta.glob('../views/pages/**/*.vue')),
     setup({el, app, props, plugin}) {
+        const availableLocales = ['en', 'ko'];
         const vue = createApp({render: () => h(app, props)});
         const i18n = setupI18n({
-            availableLocales: ['en', 'ko'],
+            availableLocales: availableLocales,
             locale: props.initialPage.props.locale as string,
             fallbackLocale: 'en',
         })
@@ -30,10 +31,9 @@ createInertiaApp({
         vue.mixin({methods: {route: window.route}});
         vue.mount(el);
 
-
-        loadLocaleMessages(i18n, props.initialPage.props.locale as string).then();
-
-        //TODO - custom language
+        availableLocales.forEach((local) => {
+            loadLocaleMessages(i18n, local).then();
+        });
     },
 }).then();
 
