@@ -3,22 +3,26 @@
         <div>
             <ul class="text-sm text-gray-500 space-y-2">
                 <li>
-                    <p v-html="$t('auth.text_service_description_1')"></p>
+                    <p>
+                        {{ $t('auth.text_service_description_1') }}
+                    </p>
                 </li>
                 <li>
-                    <p v-html="$t('auth.text_service_description_2')"></p>
+                    <p>
+                        {{ $t('auth.text_service_description_2') }}
+                    </p>
                 </li>
-                <li>
-                    <p v-html="$t('auth.text_service_description_3')"></p>
-                </li>
-                <li>
-                    <p v-html="$t('auth.text_service_description_4')"></p>
-                </li>
-                <li>
-                    <p v-html="$t('auth.text_service_description_5')"></p>
-                </li>
-                <li class="flex">
-                    <Link :href="route('connect.sign-in')" class="underline decoration-dotted hover:text-indigo-500" target="_blank" v-html="$t('auth.link_privacy_policy')"></Link>
+                <li class="flex space-x-2">
+                    <Link :href="route('connect.sign-in')" class="decorate-link" target="_blank">
+                        <p>
+                            {{ $t('auth.link_privacy_policy') }}
+                        </p>
+                    </Link>
+                    <Link :href="route('connect.sign-in')" class="decorate-link" target="_blank">
+                        <p>
+                            {{ $t('auth.link_privacy_policy') }}
+                        </p>
+                    </Link>
                 </li>
                 <li>
                     <div class="flex justify-center space-x-2 items-end pt-6">
@@ -40,11 +44,5 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 </script>
 
 <style scoped>
-.decorate-link {
-    text-decoration-line: underline;
-    text-decoration-style: dotted;
-}
-.decorate-link:hover {
-    color: rgb(99 102 241);
-}
+
 </style>

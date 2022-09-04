@@ -77,25 +77,4 @@ const denyPermission = () => {
 .font-semibold {
     font-weight: 600;
 }
-
-.yellow-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-items: center;
-    border-radius: 9999px;
-    background-color: #fef9c3;
-    padding: .125rem .625rem;
-    font-size: .75rem;
-    line-height: 1rem;
-    font-weight: 500;
-    color: #854d0e;
-}
-
-@media (prefers-color-scheme: dark) {
-    .yellow-badge {
-        background-color: #fef08a;
-        color: #713f12;
-    }
-}
-
 </style>

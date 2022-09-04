@@ -105,7 +105,9 @@ watchEffect(() => {
             <div>
                 <info-alert v-show="!alert.show" :title="$t('auth.sign_in.alert_check_hostname_title')">
                     <ul>
-                        <li v-html="$t('auth.sign_in.alert_check_hostname_message')"></li>
+                        <li>
+                            {{ $t('auth.sign_in.alert_check_hostname_message') }}
+                        </li>
                     </ul>
                 </info-alert>
                 <error-alert v-show="alert.show" title="ERROR">
