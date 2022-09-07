@@ -1,18 +1,17 @@
 {
     "common": {
-
+        "rsi_im": "RSI.im",
+        "warn": "주의",
+        "here": "여기"
     },
     "auth": {
         "text_service_subtitle": "비공식 RSI 계정 인증 서비스",
-        "text_service_description_1": "저희는 여러분의 비밀번호와 다중 인증 코드를 저장하지 않습니다. 이 서비스에 대한 소스 코드는 <a href=\"#\" class=\"decorate-link\" target=\"_blank\">여기</a>에서 확인할 수 있습니다.",
-        "text_service_description_2": "이 서비스는 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴하지 않습니다.",
-        "text_service_description_3": "",
-        "text_service_description_4": "",
-        "text_service_description_5": "",
+        "text_service_description_1": "본 서비스는 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다. <a href='https://github.com/laeng/rsi-im' class='decorate-link' target='_blank'>여기</a>에서 소스 코드를 검토할 수 있습니다.",
+        "text_service_description_2": "Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴 하지 않은 제3자 비영리 서비스입니다.",
         "link_privacy_policy": "개인정보취급방침",
         "sign_in": {
-            "alert_check_hostname_title": "잊지 마십시오!",
-            "alert_check_hostname_message": "여러분의 RSI 계정에 대한 안전을 위해 웹 사이트 주소를 확인해주십시오. 본 서비스의 올바른 주소는 <b class=\"accent-text\">rsi.im</b> 입니다.",
+            "alert_check_hostname_title": "피싱 주의!",
+            "alert_check_hostname_message": "여러분의 소중한 RSI 계정을 위해 로그인 전 반드시 웹 사이트 주소를 확인해 주십시오.",
             "form_email_label": "이메일",
             "form_email_placeholder": "someone{'@'}example.com",
             "form_password_label": "비밀번호",
@@ -21,13 +20,13 @@
             "form_captcha_placeholder": "4자리 숫자",
             "form_captcha_refresh_sr": "캡챠 이미지 새로고침",
             "form_sign_in_button": "로그인",
-            "link_what_is_this": "이것은 무엇 입니까? 안전 합니까?",
+            "link_what_is_this": "이것은 무엇인가요?",
             "link_account_recovery": "계정 복구"
         },
         "multi_factor": {
             "form_code_label": "인증 코드",
             "form_code_placeholder": "코드",
-            "form_code_message": "여러분의 이메일 또는 OTP에 나타난 코드를 입력해 주십시오. 코드를 확인할 수 없다면 백업 코드를 대신 사용할 수 있습니다.",
+            "form_code_message": "이메일 또는 OTP 앱에 표시된 코드 6글자를 입력 하십시오. 코드를 확인할 수 없다면 백업 코드를 대신 사용할 수 있습니다.",
             "form_duration_label": "서비스 신뢰 기간",
             "form_duration_options": {
                 "session": "이 세션만",
@@ -40,7 +39,7 @@
         },
         "authorize": {
             "alert_request_permission_title": "권한 요청",
-            "alert_request_permission_message": "<b class=\"font-semibold\">{ name }</b> 앱은 여러분의 RSI 계정에 있는 아래 데이터들에 접근하고자 합니다.",
+            "alert_request_permission_message": "{ name } 앱이 여러분의 RSI 계정에 등록된 아래 데이터에 접근하고자 합니다.",
             "text_scope_options": {
                 "profile": {
                     "title": "프로필",
@@ -56,7 +55,7 @@
                 },
                 "launch_game": {
                     "title": "게임 실행",
-                    "description": "<span class=\"yellow-badge\">주의</b> 서비스가 여러분의 계정 데이터를 통해 게임을 실행할 수 있습니다. 이 정보에는 여러분의 이메일, 세션 아이디, 고유한 토큰이 포함되어 있습니다. 여러분의 계정 보안을 위해 신뢰할 수 있는 앱만 허용해 주십시오."
+                    "description": "서비스가 여러분의 계정 데이터를 통해 게임을 실행할 수 있습니다. 이 정보에는 여러분의 이메일, 세션 아이디, 고유한 토큰이 포함되어 있습니다. 여러분의 계정 보안을 위해 신뢰할 수 있는 앱만 허용해 주십시오."
                 }
             },
             "form_authorize_button": "허용",

@@ -1,18 +1,17 @@
 {
     "common": {
-
+        "rsi_im": "RSI.im",
+        "warn": "WARNING",
+        "here": "here"
     },
     "auth": {
         "text_service_subtitle": "Unofficial RSI Account Authorization Service",
-        "text_service_description_1": "We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href=\"#\" class=\"decorate-link\" target=\"_blank\">here</a>.",
-        "text_service_description_2": "This service is not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.",
-        "text_service_description_3": "",
-        "text_service_description_4": "",
-        "text_service_description_5": "",
+        "text_service_description_1": "We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href='https://github.com/laeng/rsi-im' class='decorate-link' target='_blank'>here</a>",
+        "text_service_description_2": "This is a non-profit 3rd-party service not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.",
         "link_privacy_policy": "Privacy Policy",
         "sign_in": {
             "alert_check_hostname_title": "Don't forget!",
-            "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address. The correct URL for this service is <b class=\"accent-text\">rsi.im</b>.",
+            "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address.",
             "form_email_label": "Email",
             "form_email_placeholder": "someone{'@'}example.com",
             "form_password_label": "Password",
@@ -40,7 +39,7 @@
         },
         "authorize": {
             "alert_request_permission_title": "Requesting permission",
-            "alert_request_permission_message": "<b class=\"font-semibold\">{ name }</b> would like the ability access following data in your RSI Account.",
+            "alert_request_permission_message": "{ name } would like the ability access following data in your RSI Account.",
             "text_scope_options": {
                 "profile": {
                     "title": "Profile",
@@ -56,7 +55,7 @@
                 },
                 "launch_game": {
                     "title": "Launch game",
-                    "description": "<span class=\"yellow-badge\">Caution</b> The service may launch game using your account data. This data is included your email, session id, and unique token. Please allow only trusted apps for your account secure."
+                    "description": "The service may launch game using your account data. This data is included your email, session id, and unique token. Please allow only trusted apps for your account secure."
                 }
             },
             "form_authorize_button": "Allow",
