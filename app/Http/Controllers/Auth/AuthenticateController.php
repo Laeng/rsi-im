@@ -250,7 +250,7 @@ class AuthenticateController extends Controller
         }
 
         return match ($receiveData['code']) {
-            "OK" => redirect()->intended('user.index'),
+            "OK" => redirect()->intended('/user'),
             default => redirect()->route('connect.sign-in')->with('data', [
                 'code' => $receiveData['code'],
                 'message' => $receiveData['msg']
