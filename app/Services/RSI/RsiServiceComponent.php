@@ -161,8 +161,9 @@ class RsiServiceComponent implements RsiServiceComponentInterface
             $device = $this->deviceRepository->create([
                 'user_id' => $user_id,
                 'hash' => $hash,
+                'ip' => key_exists('ip', $attributes) ? $attributes['ip'] : request()->getClientIp(),
                 'data' => key_exists('data', $attributes) ? $attributes['data'] : [],
-                'expired_at' => $expireAt
+                'expired_at' => $expireAt,
             ]);
 
             return !is_null($device);
@@ -174,12 +175,18 @@ class RsiServiceComponent implements RsiServiceComponentInterface
 
     private function getDeviceModel(string $type, string $value): ?Device
     {
-        return match (mb_strtolower($type)) {
+        $device = match (mb_strtolower($type)) {
             'id' => $this->deviceRepository->findById($value),
             'hash' => $this->deviceRepository->findByHash($value),
             'user_id' => $this->deviceRepository->findByUserId($value),
             default => null
         };
+
+        if (!is_null($device)) {
+            $device->update(['updated_at' => now()]);
+        }
+
+        return $device;
     }
 
     public function createDeviceHash(string $ip, string $username): string

@@ -4,6 +4,7 @@ namespace App\Repositories\Base\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 
 interface EloquentRepositoryInterface
 {
@@ -19,5 +20,5 @@ interface EloquentRepositoryInterface
 
     public function delete(int $id): bool;
 
-    public function paginate(int $perPages);
+    public function paginate(int $perPages = 15, array $columns = ['*'], string $pageName = 'pages'): Paginator;
 }

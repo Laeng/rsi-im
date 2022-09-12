@@ -5,6 +5,8 @@ namespace App\Repositories\Device;
 use App\Models\Device;
 use App\Repositories\Base\BaseRepository;
 use App\Repositories\Device\Interfaces\DeviceRepositoryInterface;
+use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 use JetBrains\PhpStorm\Pure;
 
 class DeviceRepository extends BaseRepository implements DeviceRepositoryInterface
@@ -28,4 +30,10 @@ class DeviceRepository extends BaseRepository implements DeviceRepositoryInterfa
     {
         return $this->model->select($columns)->where('user_id', $userId)->with($relations)->latest()->first();
     }
+
+    public function paginateByUserId(int $userId, int $perPages = 15, array $columns = ['*'], string $pageName = 'pages'): Paginator
+    {
+        return $this->model->where('user_id', $userId)->paginate($perPages, $columns, $pageName);
+    }
+
 }

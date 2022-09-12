@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('hash', 64)->nullable()->index();
+            $table->string('ip', 39)->nullable();
             $table->longText('data')->nullable();
-            $table->timestamp('expired_at');
+            $table->timestamp('expired_at')->nullable();
             $table->timestamps();
         });
     }

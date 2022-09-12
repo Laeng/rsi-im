@@ -5,6 +5,7 @@ namespace App\Repositories\Base;
 use App\Repositories\Base\Interfaces\EloquentRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\Paginator;
 
 class BaseRepository implements EloquentRepositoryInterface
 {
@@ -46,8 +47,8 @@ class BaseRepository implements EloquentRepositoryInterface
         return $this->findById($id)->delete();
     }
 
-    public function paginate(int $perPages)
+    public function paginate(int $perPages = 15, array $columns = ['*'], string $pageName = 'pages'): Paginator
     {
-        return $this->model->paginate($perPages);
+        return $this->model->paginate($perPages, $columns, $pageName);
     }
 }
