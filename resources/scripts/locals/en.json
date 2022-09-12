@@ -61,5 +61,21 @@
             "form_authorize_button": "Allow",
             "form_cancel_button": "Deny"
         }
+    },
+    "user": {
+        "index": {
+            "title": "Dashboard"
+        },
+        "account": {
+            "title": "My Account"
+        },
+        "device": {
+            "title": "My Device",
+            "description": ""
+        },
+        "log": {
+            "title": "Access Log"
+
+        }
     }
 }
