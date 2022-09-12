@@ -1,19 +1,12 @@
 <template>
-    <ul class="">
-        <li>
-            <p>
-                {{ $t('auth.text_service_description_1') }}
-            </p>
-        </li>
-        <li>
-            <p>
-                {{ $t('auth.text_service_description_2') }}
-            </p>
-        </li>
+    <ul>
+        <li>{{ $t('common.disclaimer.text_1') }}</li>
+        <li>{{ $t('common.disclaimer.text_2') }}</li>
+        <li>{{ $t('common.disclaimer.text_3') }}</li>
         <li class="flex space-x-2">
             <Link :href="route('connect.sign-in')" class="decorate-link" target="_blank">
                 <p>
-                    {{ $t('auth.link_privacy_policy') }}
+                    {{ $t('common.link.privacy_policy') }}
                 </p>
             </Link>
             <a href="#" class="flex space-x-1 items-center decorate-link">

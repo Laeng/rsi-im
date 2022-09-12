@@ -1,12 +1,18 @@
 {
     "common": {
         "rsi_im": "RSI.im",
-        "warn": "주의",
-        "here": "여기"
+        "disclaimer": {
+            "text_1": "RSI.im은 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다.",
+            "text_2": "본 서비스는 오픈 소스이며 RSI.im의 GitHub 레포지토리에서 검토할 수 있습니다. 아래 GitHub 링크를 눌러 방문할 수 있습니다.",
+            "text_3": "본 서비스는 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴 하지 않은 제3자 비영리 서비스입니다."
+        },
+        "link": {
+            "privacy_policy": "개인정보취급방침"
+        }
     },
     "auth": {
         "text_service_subtitle": "비공식 RSI 계정 인증 서비스",
-        "text_service_description_1": "본 서비스는 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다. 아래 GitHub 링크를 클릭 하면 소스 코드를 볼 수 있습니다.",
+        "text_service_description_1": "본 서비스는 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다. GitHub 에서 소스 코드를 검토할 수 있습니다.",
         "text_service_description_2": "RSI.im은 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴 하지 않은 제3자 비영리 서비스입니다.",
         "link_privacy_policy": "개인정보취급방침",
         "sign_in": {
@@ -70,8 +76,7 @@
             "title": "내 계정"
         },
         "device": {
-            "title": "내 장치",
-            "description": "RSI.im에 등록된 장치 목록"
+            "title": "내 장치"
         },
         "log": {
             "title": "로그인 기록"

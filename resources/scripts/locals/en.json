@@ -1,8 +1,14 @@
 {
     "common": {
         "rsi_im": "RSI.im",
-        "warn": "WARNING",
-        "here": "here"
+        "disclaimer": {
+            "text_1": "The RSI.im don't store your password and Multi-Factor authentication code.",
+            "text_2": "This is open source and you can review the code in our GitHub repository. You can visit us at any time by clicking the github link below.",
+            "text_3": "This is a non-profit 3rd-party service not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies."
+        },
+        "link": {
+            "privacy_policy": "Privacy Policy"
+        }
     },
     "auth": {
         "text_service_subtitle": "Unofficial RSI Account Authorization Service",
@@ -70,8 +76,7 @@
             "title": "My Account"
         },
         "device": {
-            "title": "My Device",
-            "description": ""
+            "title": "My Device"
         },
         "log": {
             "title": "Access Log"
