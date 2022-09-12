@@ -1,47 +1,174 @@
 <script lang="ts" setup>
 import UserLayout from "@/views/layouts/user.vue";
+import DefaultHeading from "@/views/components/heading/default-heading.vue";
+import {computed, reactive, ref} from 'vue';
+import SecondaryButton from "@/views/components/button/secondary-button.vue";
+import axios from "axios";
+import { DateTime } from 'luxon';
+import DefaultTable from "@/views/components/table/default-table.vue";
+import {useForm} from "@inertiajs/inertia-vue3";
+import {RefreshIcon, TrashIcon} from "@heroicons/vue/solid";
 
-const props = defineProps({
-    data: Object
+const data = reactive({
+    table: {
+        current_page: 1,
+        data: [],
+        first_page_url: '',
+        from: 0,
+        last_page: 1,
+        last_page_url: '',
+        links: [],
+        next_page_url: '',
+        path: '',
+        per_page: 0,
+        prev_page_url: '',
+        to: 0,
+        total: 0
+    },
+    deleteDevice: {
+        loading: false
+    }
 });
+
+const selected = ref([]);
+const checked = ref(false);
+const indeterminate = computed(() => selected.value.length > 0 && selected.value.length < data.table.data.length);
+
+const getData = (pages: number) => {
+    pages = pages < 1 ? 1 : pages;
+
+    axios.get(`${route('user.device.data')}?pages=${pages}`)
+        .then((response) => {
+            data.table = response.data;
+        })
+        .catch(() => {
+
+        });
+}
+
+const deleteDevice = (ids: Array<any>) => {
+    if (data.deleteDevice.loading && selected.value.length <= 0) return;
+
+    data.deleteDevice.loading = true;
+
+    let query = '';
+    ids.map((value, index, array) => {
+       query += `ids[]=${value}`;
+    });
+
+    axios.delete(`${route('user.device.data')}?${query}`)
+        .then((response) => {
+            getData(data.table.current_page);
+            selected.value.splice(0, selected.value.length);
+        })
+        .catch(() => {
+
+        })
+        .finally(() => {
+            data.deleteDevice.loading = false;
+        });
+};
+
+
+getData(1);
+
 
 </script>
 
 <template>
     <user-layout page="device">
-        <div>
-            <h1 class="text-xl font-semibold">{{ $t('user.device.title') }}</h1>
-            <p class="mt-2 text-sm">{{ $t('user.device.description') }}</p>
-        </div>
+        <default-heading>
+            <template v-slot:title>
+                {{ $t('user.device.title') }}
+            </template>
+            <template v-slot:buttons>
+            </template>
+        </default-heading>
 
-        <div>
-            <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
+        <default-table class="mt-4">
+            <template v-slot:head>
                 <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
-                    <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Title</th>
-                    <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Email</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                        <span class="sr-only">Edit</span>
+                    <th scope="col" class="relative py-3.5 px-3 hidden lg:table-cell">
+                        <input type="checkbox"
+                               class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
+                               :checked="indeterminate || selected.length === data.table.data.length"
+                               :indeterminate="indeterminate" @change="selected = $event.target.checked ? data.table.data.map((p) => p.id) : []"
+                        />
+                    </th>
+                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ $t('user.device.table_id_label') }}
+                    </th>
+                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ $t('user.device.table_ip_label') }}
+                    </th>
+                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ $t('user.device.table_expired_date_label') }}
+                    </th>
+                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ $t('user.device.table_latest_date_label') }}
                     </th>
                 </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                <tr v-for="data in props.data" :key="data.id">
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ data.hash }}</td>
-                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ data.ip }}</td>
-                    <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell">{{ data.expired_at }}</td>
-                    <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ data.lasted_at }}</td>
-                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ data.created_at }}</td>
-                    <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                        >Edit<span class="sr-only">, {{ data.id }}</span></a
-                        >
+            </template>
+            <template v-slot:body>
+                <tr v-for="data in data.table.data" :key="data.id" :class="[selected.includes(data.id) && 'bg-dark/20']">
+                    <td class="relative w-12 px-6 sm:w-16 sm:px-8">
+                        <div v-if="selected.includes(data.id)" class="absolute inset-y-0 left-0 w-0.5 bg-indigo-600"></div>
+                        <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6" :value="data.id" v-model="selected" />
+                    </td>
+                    <td :class="['whitespace-nowrap px-3 py-4', selected.includes(data.id) ? 'text-indigo-600' : '']">
+                        {{ data.id }}
+                        <dl class="font-normal lg:hidden">
+                            <dt class="">{{ $t('user.device.table_ip_label') }}</dt>
+                            <dd class="mt-1 truncate text-gray-700">{{ data.ip }}</dd>
+                            <dt class="">{{ $t('user.device.table_expired_date_label') }}</dt>
+                            <dd class="mt-1 truncate text-gray-500">{{ DateTime.fromISO(data.created_at).toLocaleString(DateTime.DATETIME_MED) }}</dd>
+                            <dt class="">{{ $t('user.device.table_latest_date_label') }}</dt>
+                            <dd class="mt-1 truncate text-gray-500">{{ DateTime.fromISO(data.updated_at).toLocaleString(DateTime.DATETIME_MED) }}</dd>
+                        </dl>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ data.ip }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ DateTime.fromISO(data.created_at).toLocaleString(DateTime.DATETIME_MED) }}
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        {{ DateTime.fromISO(data.updated_at).toLocaleString(DateTime.DATETIME_MED) }}
                     </td>
                 </tr>
-                </tbody>
-            </table>
+            </template>
+            <template v-slot:paginateMessage>
+                <p class="hidden lg:block text-sm text-gray-700 dark:text-gray-300">
+                    {{ $t('common.table.table_paginate_message_label', {from: data.table.from, to: data.table.to, total: data.table.total})}}
+                </p>
+            </template>
+            <template v-slot:paginateButton>
+                <secondary-button type="button"
+                                  :disabled="data.table.current_page <= 1"
+                                  @click="getData(data.table.current_page - 1)"
+                >
+                    {{ $t('common.table.table_previous_button') }}
+                </secondary-button>
+                <p class="flex items-center md:block md:hidden text-gray-700 dark:text-gray-300 font-medium">
+                    {{ data.table.current_page }}/{{ data.table.last_page }}
+                </p>
+                <secondary-button type="button"
+                                  :disabled="data.table.current_page >= data.table.last_page "
+                                  @click="getData(data.table.current_page + 1)"
+                >
+                    {{ $t('common.table.table_next_button') }}
+                </secondary-button>
+            </template>
+        </default-table>
+
+        <div class="flex space-x-2 mt-4">
+            <secondary-button type="button" @click="deleteDevice(selected)" :disabled="data.deleteDevice.loading">
+                <span class="mr-1">
+                    <RefreshIcon class="h-4 w-4 icon-spin" v-show="data.deleteDevice.loading"/>
+                    <TrashIcon class="h-4 w-4" v-show="!data.deleteDevice.loading"/>
+                </span>
+                삭제
+            </secondary-button>
         </div>
 
     </user-layout>
