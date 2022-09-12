@@ -97,17 +97,5 @@ watchEffect(() => {
 </template>
 
 <style scoped>
-.icon-spin {
-    animation: icon-spin 1s linear infinite;
-    animation-direction: reverse;
-}
 
-@keyframes icon-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
 </style>

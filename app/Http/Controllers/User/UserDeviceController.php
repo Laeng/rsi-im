@@ -70,6 +70,7 @@ class UserDeviceController extends Controller
              */
             if ($device->getAttribute('user_id') === $userId) {
                 $deleted[] = $device->getAttribute('id');
+                $device->delete();
             }
         }
 
