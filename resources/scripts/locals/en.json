@@ -3,18 +3,19 @@
         "rsi_im": "RSI.im",
         "disclaimer": {
             "text_1": "The RSI.im don't store your password and Multi-Factor authentication code.",
-            "text_2": "This is open source and you can review the code in our GitHub repository. You can visit us at any time by clicking the github link below.",
-            "text_3": "This is a non-profit 3rd-party service not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies."
+            "text_2": "This is a non-profit 3rd-party service not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.",
+            "text_3": ""
         },
         "link": {
             "privacy_policy": "Privacy Policy"
+        },
+        "table": {
+            "table_next_button": "Next",
+            "table_previous_button": "Prev",
+            "table_paginate_message_label": "Showing {from} to {to} of {total} results"
         }
     },
     "auth": {
-        "text_service_subtitle": "Unofficial RSI Account Authorization Service",
-        "text_service_description_1": "We don't store your password and Multi-Factor authentication code. You can review the source code for this service <a href='https://github.com/laeng/rsi-im' class='decorate-link' target='_blank'>here</a>",
-        "text_service_description_2": "This is a non-profit 3rd-party service not endorsed by or affiliated with the Cloud Imperium or Roberts Space Industries group of companies.",
-        "link_privacy_policy": "Privacy Policy",
         "sign_in": {
             "alert_check_hostname_title": "Don't forget!",
             "alert_check_hostname_message": "For the safety of your RSI account, be sure to check the web address.",
@@ -76,7 +77,11 @@
             "title": "My Account"
         },
         "device": {
-            "title": "My Device"
+            "title": "My Device",
+            "table_id_label": "#",
+            "table_ip_label": "IP",
+            "table_expired_date_label": "Expiry date",
+            "table_latest_date_label": "Last sign in"
         },
         "log": {
             "title": "Access Log"

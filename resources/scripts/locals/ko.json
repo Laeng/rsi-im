@@ -2,12 +2,17 @@
     "common": {
         "rsi_im": "RSI.im",
         "disclaimer": {
-            "text_1": "RSI.im은 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다.",
-            "text_2": "본 서비스는 오픈 소스이며 RSI.im의 GitHub 레포지토리에서 검토할 수 있습니다. 아래 GitHub 링크를 눌러 방문할 수 있습니다.",
-            "text_3": "본 서비스는 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴 하지 않은 제3자 비영리 서비스입니다."
+            "text_1": "RSI.im은 여러분의 비밀번호 및 다중 인증 코드를 수집하지 않습니다. 자세한 사항은 개인정보취급방침을 확인해주십시오.",
+            "text_2": "본 서비스는 Cloud Imperium 또는 Roberts Space Industries 그룹 자회사에서 보증과 제휴 하지 않은 제3자 비영리 서비스입니다.",
+            "text_3": ""
         },
         "link": {
             "privacy_policy": "개인정보취급방침"
+        },
+        "table": {
+            "table_next_button": "다음",
+            "table_previous_button": "이전",
+            "table_paginate_message_label": "전체 {total}개 중 {from}부터 {to}까지의 결과입니다"
         }
     },
     "auth": {
@@ -76,7 +81,11 @@
             "title": "내 계정"
         },
         "device": {
-            "title": "내 장치"
+            "title": "내 장치",
+            "table_id_label": "ID",
+            "table_ip_label": "IP",
+            "table_expired_date_label": "만료 날짜",
+            "table_latest_date_label": "최근 로그인"
         },
         "log": {
             "title": "로그인 기록"
