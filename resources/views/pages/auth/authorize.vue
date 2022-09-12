@@ -62,10 +62,10 @@ const denyPermission = () => {
                 </ul>
             </div>
             <div class="flex flex-col sm:flex-row space-y-2 sm:space-x-2 sm:space-y-0">
-                <primary-button @click="approvePermission">
+                <primary-button @click="approvePermission" class="w-full">
                     {{ $t('auth.authorize.form_authorize_button') }}
                 </primary-button>
-                <secondary-button @click="denyPermission">
+                <secondary-button @click="denyPermission" class="w-full">
                     {{ $t('auth.authorize.form_cancel_button') }}
                 </secondary-button>
             </div>

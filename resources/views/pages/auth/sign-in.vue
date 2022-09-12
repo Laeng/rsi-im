@@ -161,7 +161,7 @@ watchEffect(() => {
                 </div>
             </div>
             <div>
-                <primary-button :disabled="loading.visible">
+                <primary-button :disabled="loading.visible" class="w-full">
                     <span class="mr-1">
                         <RefreshIcon class="h-4 w-4 icon-spin" v-show="loading.visible"/>
                         <LockClosedIcon class="h-4 w-4" v-show="!loading.visible"/>
