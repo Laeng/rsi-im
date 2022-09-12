@@ -36,6 +36,9 @@ class Device extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'data' => 'encrypted:array'
+        'data' => 'encrypted:array',
+        'expired_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 }
