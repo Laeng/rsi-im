@@ -1,5 +1,4 @@
 import InertiaProgress from "@/scripts/progress";
-
 import {createApp, h, watch} from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { resolvePageComponent } from 'vite-plugin-laravel/inertia';
