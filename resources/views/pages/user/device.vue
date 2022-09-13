@@ -6,8 +6,9 @@ import SecondaryButton from "@/views/components/button/secondary-button.vue";
 import axios from "axios";
 import { DateTime } from 'luxon';
 import DefaultTable from "@/views/components/table/default-table.vue";
-import {useForm} from "@inertiajs/inertia-vue3";
 import {RefreshIcon, TrashIcon} from "@heroicons/vue/solid";
+import DefaultTooltip from "@/views/components/tooltip/default-table.vue";
+
 
 const data = reactive({
     table: {
@@ -69,6 +70,23 @@ const deleteDevice = (ids: Array<any>) => {
         });
 };
 
+const convertDateTime = (isoFormat: string) => {
+    const now = DateTime.now().toUTC();
+    const dt = DateTime.fromISO(isoFormat).toUTC();
+
+    console.log(now.diff(dt, 'hours').hours);
+
+
+    if (now.diff(dt, 'hours').hours > 24) {
+        return dt.toLocal().toLocaleString(DateTime.DATE_SHORT);
+    } else {
+        return dt.toLocal().toLocaleString(DateTime.TIME_24_SIMPLE)
+    }
+}
+
+const getDateTime = (isoFormat: string) => {
+    return DateTime.fromISO(isoFormat).toUTC().toLocal().toLocaleString(DateTime.DATETIME_MED);
+}
 
 getData(1);
 
@@ -88,34 +106,34 @@ getData(1);
         <default-table class="mt-4">
             <template v-slot:head>
                 <tr>
-                    <th scope="col" class="relative py-3.5 px-3 hidden lg:table-cell">
+                    <th scope="col" class="relative py-3.5 px-1.5 hidden lg:table-cell">
                         <input type="checkbox"
-                               class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
+                               class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                :checked="indeterminate || selected.length === data.table.data.length"
                                :indeterminate="indeterminate" @change="selected = $event.target.checked ? data.table.data.map((p) => p.id) : []"
                         />
                     </th>
-                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                    <th scope="col" class="py-3.5 px-1.5 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
                         {{ $t('user.device.table_id_label') }}
                     </th>
-                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                    <th scope="col" class="py-3.5 px-1.5 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
                         {{ $t('user.device.table_ip_label') }}
                     </th>
-                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                    <th scope="col" class="py-3.5 px-1.5 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
                         {{ $t('user.device.table_expired_date_label') }}
                     </th>
-                    <th scope="col" class="py-3.5 px-3 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
+                    <th scope="col" class="py-3.5 px-1.5 uppercase tracking-wider whitespace-nowrap tabular-nums hidden lg:table-cell">
                         {{ $t('user.device.table_latest_date_label') }}
                     </th>
                 </tr>
             </template>
             <template v-slot:body>
                 <tr v-for="data in data.table.data" :key="data.id" :class="[selected.includes(data.id) && 'bg-dark/20']">
-                    <td class="relative w-12 px-6 sm:w-16 sm:px-8">
+                    <td class="relative w-12 px-1.5">
                         <div v-if="selected.includes(data.id)" class="absolute inset-y-0 left-0 w-0.5 bg-indigo-600"></div>
-                        <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6" :value="data.id" v-model="selected" />
+                        <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" :value="data.id" v-model="selected" />
                     </td>
-                    <td :class="['whitespace-nowrap px-3 py-4', selected.includes(data.id) ? 'text-indigo-600' : '']">
+                    <td :class="['whitespace-nowrap  px-1.5 py-4', selected.includes(data.id) ? 'text-indigo-600' : '']">
                         {{ data.id }}
                         <dl class="font-normal lg:hidden">
                             <dt class="">{{ $t('user.device.table_ip_label') }}</dt>
@@ -126,14 +144,22 @@ getData(1);
                             <dd class="mt-1 truncate text-gray-500">{{ DateTime.fromISO(data.updated_at).toLocaleString(DateTime.DATETIME_MED) }}</dd>
                         </dl>
                     </td>
-                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                    <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
                         {{ data.ip }}
                     </td>
-                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
-                        {{ DateTime.fromISO(data.created_at).toLocaleString(DateTime.DATETIME_MED) }}
+                    <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        <div class="flex">
+                            <default-tooltip :message="getDateTime(data.created_at)" :offset="4">
+                                {{ convertDateTime(data.created_at) }}
+                            </default-tooltip>
+                        </div>
                     </td>
-                    <td class="whitespace-nowrap px-3 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
-                        {{ DateTime.fromISO(data.updated_at).toLocaleString(DateTime.DATETIME_MED) }}
+                    <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
+                        <div class="flex">
+                            <default-tooltip :message="getDateTime(data.updated_at)" :offset="4">
+                                {{ convertDateTime(data.updated_at) }}
+                            </default-tooltip>
+                        </div>
                     </td>
                 </tr>
             </template>

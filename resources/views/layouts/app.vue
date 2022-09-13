@@ -72,7 +72,7 @@ const sidebarOpen = ref(false)
 
     <div class="grid grid-cols-1 lg:grid-cols-5">
         <aside class="hidden lg:col-span-2 lg:flex lg:justify-end lg:h-screen lg:shadow-2xl bg-[#273247] dark:bg-[#1B2435]">
-            <div class="w-full xl:w-2/3 2xl:w-1/2 flex flex-col p-8 2xl:p-16">
+            <div class="w-full xl:w-2/3 2xl:w-1/2 flex flex-col p-8" style="max-width: 400px">
                 <slot name="aside"/>
             </div>
         </aside>
@@ -89,10 +89,10 @@ const sidebarOpen = ref(false)
                         </button>
                     </header>
 
-                    <main class="grow p-4 sm:p-6 md:p-8 2xl:p-16">
+                    <main class="grow p-4 sm:p-6 md:p-8">
                         <slot name="main"/>
                     </main>
-                    <footer class="p-4 sm:p-6 md:p-8 2xl:p-16">
+                    <footer class="p-4 sm:p-6 md:p-8">
                         <footer-label class="text-gray-500 text-sm space-y-1"/>
                     </footer>
                 </div>

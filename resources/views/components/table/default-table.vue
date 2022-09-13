@@ -5,12 +5,12 @@
                 <thead class="bg-gray-100 dark:bg-[#131925] text-xs font-medium text-left">
                 <slot name="head"/>
                 </thead>
-                <tbody class="bg-white dark:bg-[#1B2435] divide-y divide-gray-300 dark:divide-gray-700 text-sm">
+                <tbody class="bg-white dark:bg-[#1B2435] divide-y divide-gray-300 dark:divide-gray-700 lg:text-sm">
                 <slot name="body"/>
                 </tbody>
             </table>
         </div>
-        <nav class="flex items-center justify-between border-t border-gray-300 dark:border-gray-700 text-sm bg-gray-100 dark:bg-[#131925] px-4 py-3 sm:px-6 rounded-b-md">
+        <nav class="flex items-center justify-between border-t border-gray-300 dark:border-gray-700 text-sm bg-gray-100 dark:bg-[#131925] p-3 rounded-b-md">
             <div class="">
                 <slot name="paginateMessage"/>
             </div>
