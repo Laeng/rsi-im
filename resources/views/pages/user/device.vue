@@ -70,26 +70,18 @@ const deleteDevice = (ids: Array<any>) => {
         });
 };
 
-const convertDateTime = (isoFormat: string) => {
-    const now = DateTime.now().toUTC();
-    const dt = DateTime.fromISO(isoFormat).toUTC();
-
-    console.log(now.diff(dt, 'hours').hours);
-
-
-    if (now.diff(dt, 'hours').hours > 24) {
-        return dt.toLocal().toLocaleString(DateTime.DATE_SHORT);
-    } else {
-        return dt.toLocal().toLocaleString(DateTime.TIME_24_SIMPLE)
-    }
+const getSimpleDateTime = (isoFormat: string) => {
+    return DateTime.fromISO(isoFormat).toUTC().toLocal().toLocaleString(DateTime.DATE_SHORT);
 }
 
-const getDateTime = (isoFormat: string) => {
+const getDetailDateTime = (isoFormat: string) => {
     return DateTime.fromISO(isoFormat).toUTC().toLocal().toLocaleString(DateTime.DATETIME_MED);
 }
 
-getData(1);
-
+getData(data.table.current_page);
+setInterval(() => {
+    getData(data.table.current_page)
+}, 4000);
 
 </script>
 
@@ -149,15 +141,15 @@ getData(1);
                     </td>
                     <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
                         <div class="flex">
-                            <default-tooltip :message="getDateTime(data.created_at)" :offset="4">
-                                {{ convertDateTime(data.created_at) }}
+                            <default-tooltip :message="getDetailDateTime(data.created_at)" :offset="4">
+                                {{ getSimpleDateTime(data.created_at) }}
                             </default-tooltip>
                         </div>
                     </td>
                     <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
                         <div class="flex">
-                            <default-tooltip :message="getDateTime(data.updated_at)" :offset="4">
-                                {{ convertDateTime(data.updated_at) }}
+                            <default-tooltip :message="getDetailDateTime(data.updated_at)" :offset="4">
+                                {{ getSimpleDateTime(data.updated_at) }}
                             </default-tooltip>
                         </div>
                     </td>

@@ -238,7 +238,8 @@ class AuthenticateController extends Controller
                 if (is_null($device->getAttribute('user_id'))) {
                     $deviceData = [
                         'user_id' => $userId,
-                        'duration' => $session->has('duration') ? $session->pull('duration') : 'session'
+                        'duration' => $session->has('duration') ? $session->pull('duration') : 'session',
+                        'ip' => $request->getClientIp()
                     ];
 
                     $this->rsiService->setDevice('id', $device->getAttribute('id'), $deviceData);
