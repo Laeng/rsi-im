@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Token;
@@ -42,7 +43,18 @@ class User extends Authenticatable
         'data' => 'encrypted:array'
     ];
 
-    public function token() {
+    public function token(): HasMany
+    {
         return $this->hasMany(Token::class);
+    }
+
+    public function device(): HasMany
+    {
+        return $this->hasMany(Device::class);
+    }
+
+    public function log(): HasMany
+    {
+        return $this->hasMany(UserLog::class);
     }
 }

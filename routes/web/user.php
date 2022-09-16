@@ -15,4 +15,6 @@ Route::prefix('my')->middleware(['auth:web'])->name('user.')->group(function () 
     });
 
     Route::get('/log', [UserController::class, 'log'])->name('log');
+
+    Route::delete('/data', [UserController::class, 'delete'])->name('data');
 });

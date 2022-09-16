@@ -129,6 +129,7 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
         if (key_exists('member', $data)) {
             $member = $data['member'];
             $newData['avatar'] = key_exists('avatar', $member) ? $member['avatar'] : null;
+            //$newData['signature'] = key_exists('signature', $member) ? $member['signature'] : null;
         }
 
         if (key_exists('communities', $data) && count($data['communities']) > 1) {
@@ -141,7 +142,8 @@ class RsiService extends RsiServiceComponent implements RsiServiceInterface
                     'id' => key_exists('id', $community) ? $community['id'] : null,
                     'name' => key_exists('name', $community) ? $community['name'] : null,
                     'avatar' => key_exists('avatar', $community) ? $community['avatar'] : null,
-                    'banner' => key_exists('banner', $community) ? $community['banner'] : null
+                    'banner' => key_exists('banner', $community) ? $community['banner'] : null,
+                    'slug' => key_exists('slug', $community) ? $community['slug'] : null
                 ];
             }
 

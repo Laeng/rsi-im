@@ -13,7 +13,9 @@
             "table_next_button": "Next",
             "table_previous_button": "Prev",
             "table_paginate_message_label": "Showing {from} to {to} of {total} results"
-        }
+        },
+        "text_service_description": "",
+        "text_edit_profile": "Edit profile"
     },
     "auth": {
         "sign_in": {
@@ -74,7 +76,18 @@
             "title": "Dashboard"
         },
         "account": {
-            "title": "My Account"
+            "title": "My Account",
+            "dl_profile_username_label": "Username",
+            "dl_profile_nickname_label": "Nickname",
+            "dl_profile_display_name_label": "Display name",
+            "dl_profile_avatar_label": "Avatar",
+            "dl_profile_badges_label": "Badges",
+            "dl_profile_organizations_label": "organizations",
+            "dl_profile_organizations_empty_label": "There is no joined organization.",
+            "dl_profile_last_sign_in_label": "Last Access",
+            "div_delete_account_title_label": "Delete your RSI.im data",
+            "div_delete_account_description_label": "Once you delete your data, you will lose all data associated with it.",
+            "div_delete_account_button": "Delete Data"
         },
         "device": {
             "title": "My Device",
@@ -86,6 +99,9 @@
         "log": {
             "title": "Access Log"
 
+        },
+        "sign-out": {
+            "title": "Sign out"
         }
     }
 }

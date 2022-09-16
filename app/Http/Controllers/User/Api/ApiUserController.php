@@ -22,9 +22,9 @@ class ApiUserController
     }
 
     /**
-     * [GET] user profile.
+     * [GET] /api/v1/user
+     * user profile.
      *
-     * @link /api/v1/user
      * @param Request $request
      * @return JsonResponse
      */
@@ -48,9 +48,9 @@ class ApiUserController
     }
 
     /**
-     * [GET] User joined organizations.
+     * [GET] /api/v1/user/organizations
+     * User joined organizations.
      *
-     * @link /api/v1/user/organizations
      * @param Request $request
      * @return JsonResponse
      */
@@ -73,7 +73,8 @@ class ApiUserController
     }
 
     /**
-     * [GET] User owned games.
+     * [GET] /api/v1/user/games
+     * User owned games.
      *
      * @link /api/v1/user/games
      * @param Request $request
@@ -104,9 +105,9 @@ class ApiUserController
     }
 
     /**
-     * [GET] User launch data.
+     * [GET] /api/v1/user/launch
+     * User launch data.
      *
-     * @link /api/v1/user/launch
      * @param Request $request
      * @return JsonResponse
      */
@@ -149,7 +150,8 @@ class ApiUserController
     }
 
     /**
-     * [GET] authentication status.
+     * [GET] /api/v1/user/check
+     * authentication status.
      *
      * @param Request $request
      * @return JsonResponse

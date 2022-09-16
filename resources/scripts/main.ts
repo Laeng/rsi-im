@@ -1,5 +1,5 @@
 import InertiaProgress from "@/scripts/progress";
-import {createApp, h, watch} from 'vue';
+import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { resolvePageComponent } from 'vite-plugin-laravel/inertia';
 import {loadLocaleMessages, setupI18n} from "@/scripts/i18n";

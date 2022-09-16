@@ -22,4 +22,4 @@ require_once __DIR__ . '/web/user.php';
 
 Route::get('/', function () {
     return inertia('welcome');
-});
+})->name('welcome');

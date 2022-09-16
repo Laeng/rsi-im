@@ -13,7 +13,9 @@
             "table_next_button": "다음",
             "table_previous_button": "이전",
             "table_paginate_message_label": "전체 {total}개 중 {from}부터 {to}까지의 결과입니다"
-        }
+        },
+        "text_service_description": "",
+        "text_edit_profile": "프로필 수정"
     },
     "auth": {
         "text_service_subtitle": "비공식 RSI 계정 인증 서비스",
@@ -78,7 +80,18 @@
             "title": "대시보드"
         },
         "account": {
-            "title": "내 계정"
+            "title": "내 계정",
+            "dl_profile_username_label": "아이디",
+            "dl_profile_nickname_label": "콜사인",
+            "dl_profile_display_name_label": "닉네임",
+            "dl_profile_avatar_label": "프로필 이미지",
+            "dl_profile_badges_label": "뱃지",
+            "dl_profile_organizations_label": "함대",
+            "dl_profile_organizations_empty_label": "가입한 함대가 없습니다.",
+            "dl_profile_last_sign_in_label": "최근 로그인",
+            "div_delete_account_title_label": "RSI.im 데이터 삭제",
+            "div_delete_account_description_label": "데이터 삭제 시 RSI.im 에 등록된 모든 데이터가 삭제 됩니다.",
+            "div_delete_account_button": "데이터 삭제"
         },
         "device": {
             "title": "내 장치",
@@ -89,7 +102,9 @@
         },
         "log": {
             "title": "로그인 기록"
-
+        },
+        "sign-out": {
+            "title": "로그아웃"
         }
     }
 }

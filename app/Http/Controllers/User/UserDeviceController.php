@@ -15,11 +15,10 @@ use Inertia\Response as InertiaResponse;
 class UserDeviceController extends Controller
 {
     /**
-     * [GET] user device
+     * [GET] /my/device
      *
      * @param Request $request
      * @return InertiaResponse
-     * @link /my/device
      */
     public function device(Request $request): InertiaResponse
     {
@@ -27,12 +26,11 @@ class UserDeviceController extends Controller
     }
 
     /**
-     * [GET] user device data
+     * [GET] /my/device/data
      *
      * @param Request $request
      * @param DeviceRepositoryInterface $deviceRepository
      * @return string
-     * @link /my/device/data
      */
     public function get(Request $request, DeviceRepositoryInterface $deviceRepository): string
     {
@@ -46,12 +44,11 @@ class UserDeviceController extends Controller
     }
 
     /**
-     * [DELETE] user device data
+     * [DELETE] /my/device/data
      *
      * @param Request $request
      * @param DeviceRepositoryInterface $deviceRepository
      * @return JsonResponse
-     * @link /my/device/data
      */
     public function delete(Request $request, DeviceRepositoryInterface $deviceRepository): JsonResponse
     {
