@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserLogType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,8 +39,9 @@ class UserLog extends Model
      */
     protected $casts = [
         'user_id' => 'integer',
-        'type' => 'string',
+        'type' => UserLogType::class,
         'ip' => 'string',
         'data' => 'encrypted:array'
     ];
 }
+
