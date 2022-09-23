@@ -97,7 +97,14 @@
             "table_latest_date_label": "Last sign in"
         },
         "log": {
-            "title": "Access Log"
+            "title": "Access Log",
+            "table_type_label": "Type",
+            "table_ip_label": "IP",
+            "table_created_date_label": "Date",
+            "table_types_label": {
+                "sign_in": "Sign In",
+                "sign_out": "Sign Out"
+            }
 
         },
         "sign-out": {

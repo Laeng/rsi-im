@@ -101,9 +101,16 @@
             "table_latest_date_label": "최근 로그인"
         },
         "log": {
-            "title": "로그인 기록"
+            "title": "로그인 기록",
+            "table_type_label": "분류",
+            "table_ip_label": "IP",
+            "table_created_date_label": "날짜",
+            "table_types_label": {
+                "sign_in": "로그인",
+                "sign_out": "로그아웃"
+            }
         },
-        "sign-out": {
+        "sign_out": {
             "title": "로그아웃"
         }
     }
