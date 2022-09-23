@@ -81,7 +81,7 @@ const getDetailDateTime = (isoFormat: string) => {
 getData(data.table.current_page);
 setInterval(() => {
     getData(data.table.current_page)
-}, 4000);
+}, 5000);
 
 </script>
 
@@ -131,9 +131,9 @@ setInterval(() => {
                             <dt class="">{{ $t('user.device.table_ip_label') }}</dt>
                             <dd class="mt-1 truncate text-gray-700">{{ data.ip }}</dd>
                             <dt class="">{{ $t('user.device.table_expired_date_label') }}</dt>
-                            <dd class="mt-1 truncate text-gray-500">{{ DateTime.fromISO(data.created_at).toLocaleString(DateTime.DATETIME_MED) }}</dd>
+                            <dd class="mt-1 truncate text-gray-500">{{ getDetailDateTime(data.created_at) }}</dd>
                             <dt class="">{{ $t('user.device.table_latest_date_label') }}</dt>
-                            <dd class="mt-1 truncate text-gray-500">{{ DateTime.fromISO(data.updated_at).toLocaleString(DateTime.DATETIME_MED) }}</dd>
+                            <dd class="mt-1 truncate text-gray-500">{{ getDetailDateTime(data.updated_at) }}</dd>
                         </dl>
                     </td>
                     <td class="whitespace-nowrap px-1.5 py-4 whitespace-nowrap tabular-nums hidden lg:table-cell">
