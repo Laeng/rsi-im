@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\UserDeviceController;
+use App\Http\Controllers\User\UserLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('my')->middleware(['auth:web'])->name('user.')->group(function () {
@@ -14,7 +15,10 @@ Route::prefix('my')->middleware(['auth:web'])->name('user.')->group(function () 
         Route::delete('/data', [UserDeviceController::class, 'delete'])->name('data');
     });
 
-    Route::get('/log', [UserController::class, 'log'])->name('log');
+    Route::prefix('log')->name('log.')->group(function () {
+        Route::get('/', [UserLogController::class, 'log'])->name('index');
+        Route::get('/data', [UserLogController::class, 'get'])->name('data');
+    });
 
     Route::delete('/data', [UserController::class, 'delete'])->name('data');
 });
