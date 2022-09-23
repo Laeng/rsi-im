@@ -46,27 +46,6 @@ class UserController extends Controller
     }
 
     /**
-     * [GET] /my/log
-     *
-     * @param Request $request
-     * @param RsiServiceInterface $rsiService
-     * @return InertiaResponse
-     */
-    public function log(Request $request, RsiServiceInterface $rsiService): InertiaResponse
-    {
-        $user = Auth::user();
-        $device = $rsiService->getDevice('user_id', $user->getAttribute('id'));
-        $deviceData = $device->attributesToArray();
-
-        unset($deviceData['hash']);
-        unset($deviceData['data']);
-
-        return Inertia::render('user/device', [
-            'data' => $deviceData
-        ]);
-    }
-
-    /**
      * [DELETE] /my/data
      *
      * @param Request $request
