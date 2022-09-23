@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->string('type');
-            $table->string('ip', 45);
-            $table->longText('data');
+            $table->string('ip', 45)->nullable();
+            $table->longText('data')->nullable();
             $table->timestamps();
         });
     }
