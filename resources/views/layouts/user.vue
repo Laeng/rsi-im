@@ -23,8 +23,8 @@ const navigation = [
     { name: 'index', href: route('user.index'), icon: HomeIcon},
     { name: 'account', href: route('user.account'), icon: UsersIcon },
     { name: 'device', href: route('user.device.index'), icon: FolderIcon},
-    { name: 'log', href: route('user.log'), icon: CalendarIcon },
-    { name: 'sign-out', href: route('disconnect.sign-out'), icon: LogoutIcon}
+    { name: 'log', href: route('user.log.index'), icon: CalendarIcon },
+    { name: 'sign_out', href: route('disconnect.sign-out'), icon: LogoutIcon}
 ]
 </script>
 

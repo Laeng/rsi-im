@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SignInEvent;
+use App\Events\SignOutEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Services\RSI\Interfaces\RsiServiceInterface;
@@ -54,6 +56,7 @@ class AuthenticateController extends Controller
     public function signOut(Request $request): RedirectResponse
     {
         if (Auth::check()) {
+            SignOutEvent::dispatch($request,  Auth::user());
             Auth::logout();
 
             $request->session()->invalidate();
@@ -150,6 +153,8 @@ class AuthenticateController extends Controller
         $password = $request->get('password');
         $captcha = $request->get('captcha') ?? ''; // don't use default attribute
 
+        $session = $request->session();
+
         $deviceHash = $this->rsiService->createDeviceHash($request->getClientIp(), $username);
         $device = $this->rsiService->getDevice('hash', $deviceHash);
 
@@ -160,7 +165,6 @@ class AuthenticateController extends Controller
                 'message' => 'Not found device date'
             ];
         } else {
-            $session = $request->session();
             $session->put('username', $username);
             $session->put('device_id', $device->getAttribute('id'));
 
@@ -171,6 +175,8 @@ class AuthenticateController extends Controller
                 $captcha
             );
         }
+
+        $session->put('ip', $request->getClientIp());
 
         return $this->response($request, $receiveData);
     }
@@ -239,7 +245,7 @@ class AuthenticateController extends Controller
                     $deviceData = [
                         'user_id' => $userId,
                         'duration' => $session->has('duration') ? $session->pull('duration') : 'session',
-                        'ip' => $request->getClientIp()
+                        'ip' => $session->pull('ip')
                     ];
 
                     $this->rsiService->setDevice('id', $device->getAttribute('id'), $deviceData);
@@ -247,6 +253,8 @@ class AuthenticateController extends Controller
 
                 Auth::loginUsingId($userId);
                 $session->regenerate();
+
+                SignInEvent::dispatch($request, Auth::user());
             }
         }
 
